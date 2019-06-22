@@ -15,7 +15,7 @@
 
 <script>
 import io from 'socket.io-client';
-
+import Store from "../store/state-store";
 
 export default {
   name: 'Register-page',
@@ -24,7 +24,6 @@ export default {
   },
   data() {
     return {
-      socket: '',  
       searching: false,
       name: '',
       playerFound: false,
@@ -34,21 +33,21 @@ export default {
   },
   methods: {
     searchForGame() {
-            this.socket = io('http://localhost:3500', {
-                 reconnection: false
+            Store.state.socket = io('http://localhost:3500', {
+                 reconnection: false,
             });
 
 
-            this.socket.on("connect_error", () => {
+            Store.state.socket.on("connect_error", () => {
                 this.showConnectionError = true;
             })
 
-            this.socket.on("connect", () => {
-                this.socket.on("opponent-found", (opponent) => {
+            Store.state.socket.on("connect", () => {
+                Store.state.socket.on("opponent-found", (opponent) => {
                 this.searching = false;
                 this.opponent = opponent
                 this.playerFound = true;
-                this.socket.disconnect();
+                Store.state.socket.disconnect();
                 const nameSpaceSocket = io('http://localhost:3500' + opponent.nameSpace);
 
                 nameSpaceSocket.on("welcome", (data) => {
@@ -59,7 +58,8 @@ export default {
                     alert("USER HAS DISCONNECTED")
                 })
                 })
-                this.socket.emit("game-searching", this.name);
+                
+                Store.state.socket.emit("game-searching", this.name);
                 this.searching = true;
             })
 
