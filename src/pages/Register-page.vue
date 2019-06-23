@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <main>
       <p v-if="!showConnectionError">Currentl {{ usersOnline }} players online</p>
         <form id="registerSection" v-if="!searching && !playerFound && !showConnectionError"  v-on:submit.prevent>
             <h1>Please enter a username</h1>
@@ -12,16 +12,14 @@
           <div class="cube1"></div>
           <div class="cube2"></div>
         </div>    
-        <div id="playerFound" v-if="playerFound">You have matched with {{ opponent.name }}</div>
         <div id="connectionError" v-if="showConnectionError" style="color: red">We ran into a problem connecting you with the servers</div>
 
-    </div>
+    </main>
 </template>
 
 <script>
 import io from 'socket.io-client';
 import $store from "../store/state-store";
-import router from "../main"
 
 export default {
   name: 'Register-page',
@@ -63,7 +61,7 @@ export default {
                 this.searching = false;
                 this.opponent = opponent
                 this.playerFound = true;
-                router.push({
+                this.$router.push({
                     name: "game",
                     params: {
                         namespace: opponent.nameSpace,
@@ -134,6 +132,11 @@ export default {
     transform: rotate(-360deg);
     -webkit-transform: rotate(-360deg);
   }
+}
+
+main {
+  height: 100vh;
+  background-color: blueviolet
 }
 
 </style>

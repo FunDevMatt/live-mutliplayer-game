@@ -1,17 +1,16 @@
 <template>
-    <div>
+    <main>
         <p v-if="loadingUsersIn">Loading Game...</p>
-        <p v-if="!loadingUsersIn">You have been matched against {{ opponent.name }}</p>
+        <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
         <div id="gameBoard" v-if="!loadingUsersIn"></div>
 
-    </div>
+    </main>
 </template>
 
 
 <script>
 import $store from "../store/state-store";
 import io from 'socket.io-client';
-import router from "../main"
 
 
 
@@ -25,7 +24,9 @@ export default {
             opponent: '' 
         }
     },
+
     mounted() {
+    
 
         $store.state.nspSocket = io(`http://localhost:3500${this.$props.namespace}`);
 
@@ -53,7 +54,7 @@ export default {
             $store.state.nspSocket.disconnect();
             $store.commit("updateUsersOnline", data)
 
-            router.push({
+            this.$router.push({
                     name: "register"
                 })
             
@@ -69,7 +70,7 @@ export default {
 
     #gameBoard {
         height: 100vh;
-        background-color: pink
+        background-color: blueviolet
     }
 
     .box {
@@ -77,5 +78,6 @@ export default {
         height: 20px;
         background-color: white;
     }
+    
 
 </style>

@@ -23,6 +23,16 @@ const router = new VueRouter({
   ]
 })
 
+
+// send user back to register page if they refresh
+if (performance.navigation.type == 1) {
+  router.push({
+    name: "register"
+  })
+}
+
+
+
 new Vue({
   router,
   render: h => h(App),
