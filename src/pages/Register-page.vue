@@ -1,5 +1,6 @@
 <template>
     <div>
+      <p>Currently {{ usersOnline }} players online</p>
         <form id="registerSection" v-if="!searching && !playerFound && !showConnectionError"  v-on:submit.prevent>
             <h1>Please enter a username</h1>
             <input type="text" id="name" v-model="name">
@@ -7,6 +8,10 @@
             <button @click="searchForGame()">Search for game</button>
         </form>
         <div id="searchingLoader" v-if="searching">Searching for a game....</div>
+        <div class="spinner" v-if="searching">
+          <div class="cube1"></div>
+          <div class="cube2"></div>
+        </div>    
         <div id="playerFound" v-if="playerFound">You have matched with {{ opponent.name }}</div>
         <div id="connectionError" v-if="showConnectionError" style="color: red">We ran into a problem connecting you to a match</div>
 
@@ -29,22 +34,27 @@ export default {
       name: '',
       playerFound: false,
       opponent: '',
-      showConnectionError: false
+      showConnectionError: false,
+      usersOnline: 0
     }
   },
-  methods: {
-    searchForGame() {
-            $store.state.socket = io('http://localhost:3500', {
+  mounted() {
+      console.log("RUN")
+          $store.state.socket = io('http://localhost:3500', {
                  reconnection: false,
             });
-
-
-            $store.state.socket.on("connect_error", () => {
+            
+          $store.state.socket.on("connect_error", () => {
                 this.showConnectionError = true;
             })
 
-            $store.state.socket.on("connect", () => {
-                $store.state.socket.on("opponent-found", (opponent) => {
+          $store.state.socket.on("users-online", (users) => {
+                this.usersOnline = users;
+            })
+  },
+  methods: {
+    searchForGame() {
+               $store.state.socket.on("opponent-found", (opponent) => {
                 this.searching = false;
                 this.opponent = opponent
                 this.playerFound = true;
@@ -59,7 +69,6 @@ export default {
                 
                 $store.state.socket.emit("game-searching", this.name);
                 this.searching = true;
-            })
 
             
 
@@ -71,5 +80,54 @@ export default {
 </script>
 
 <style>
+spinner {
+  margin: 100px auto;
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+.cube1, .cube2 {
+  background-color: #333;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  -webkit-animation: sk-cubemove 1.8s infinite ease-in-out;
+  animation: sk-cubemove 1.8s infinite ease-in-out;
+}
+
+.cube2 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+@-webkit-keyframes sk-cubemove {
+  25% { -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5) }
+  50% { -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg) }
+  75% { -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5) }
+  100% { -webkit-transform: rotate(-360deg) }
+}
+
+@keyframes sk-cubemove {
+  25% { 
+    transform: translateX(42px) rotate(-90deg) scale(0.5);
+    -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+  } 50% { 
+    transform: translateX(42px) translateY(42px) rotate(-179deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+  } 50.1% { 
+    transform: translateX(42px) translateY(42px) rotate(-180deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+  } 75% { 
+    transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+    -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+  } 100% { 
+    transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+  }
+}
 
 </style>
