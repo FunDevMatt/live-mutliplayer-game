@@ -1,6 +1,11 @@
 <template>
-    <h1>This si the game </h1>
-    </template>
+    <div>
+        <p v-if="loadingUsersIn">Loading Game...</p>
+        <p v-if="!loadingUsersIn">You have been matched against {{ opponent.name }}</p>
+        <div id="gameBoard" v-if="!loadingUsersIn"></div>
+
+    </div>
+</template>
 
 
 <script>
@@ -11,6 +16,13 @@ import io from 'socket.io-client';
 export default {
     name: 'Game-page',
     props: ['namespace', 'name'],
+    data() {
+        return {
+            loadingUsersIn: true,
+            currentPlayer: '',
+            opponent: '' 
+        }
+    },
     mounted() {
         $store.state.socket.disconnect();
         $store.commit("updateSocket", '');
@@ -23,10 +35,20 @@ export default {
 
         $store.state.nspSocket.on("match-info", (data) => {
             console.log(data)
+            for (let player in data) {
+
+                if (data[player].name !== this.$props.name) {
+                    this.opponent = data[player];
+                } else {
+                    this.currentPlayer = data[player]
+                }
+            }
+            this.loadingUsersIn = false
         })
 
         $store.state.nspSocket.on("user-left", () => {
-            alert("USER HAS DISCONNECTED")
+            alert("USER DISCONNECTED")
+            
         })
             
     }
@@ -35,6 +57,17 @@ export default {
 </script>
 
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
+
+    #gameBoard {
+        height: 100vh;
+        background-color: pink
+    }
+
+    .box {
+        width: 80px;
+        height: 20px;
+        background-color: white;
+    }
 
 </style>
