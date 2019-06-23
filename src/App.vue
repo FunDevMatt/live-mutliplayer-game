@@ -1,9 +1,7 @@
 <template>
   <div id="app">
-    <transition name="router-animation" enter-active-class="animated pulse" leave-active-class="animated pulse">
+    <transition>
           <router-view></router-view>
-
-    
     </transition>
 
   </div>
@@ -18,8 +16,6 @@ export default {
 </script>
 
 <style>
-@import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css";
-
 
 
 * {

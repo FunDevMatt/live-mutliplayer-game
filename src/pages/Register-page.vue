@@ -1,6 +1,6 @@
 <template>
     <div>
-      <p v-if="!showConnectionError">Currently {{ usersOnline }} players online</p>
+      <p v-if="!showConnectionError">Currentl {{ usersOnline }} players online</p>
         <form id="registerSection" v-if="!searching && !playerFound && !showConnectionError"  v-on:submit.prevent>
             <h1>Please enter a username</h1>
             <input type="text" id="name" v-model="name">
@@ -39,6 +39,7 @@ export default {
     }
   },
   mounted() {
+          this.usersOnline = $store.state.usersOnline;
           $store.state.socket = io('http://localhost:3500', {
                  reconnection: false,
             });
@@ -53,7 +54,8 @@ export default {
 
           $store.state.socket.on("users-online", (users) => {
                 this.usersOnline = users;
-            })
+                $store.commit("updateUsersOnline", users)
+          })
   },
   methods: {
     searchForGame() {
@@ -70,8 +72,8 @@ export default {
                 })
             })
                 
-                $store.state.socket.emit("game-searching", this.name);
-                this.searching = true;
+            $store.state.socket.emit("game-searching", this.name);
+            this.searching = true;
 
             
 
@@ -82,8 +84,9 @@ export default {
 }
 </script>
 
-<style>
-spinner {
+<style >
+
+.spinner {
   margin: 100px auto;
   width: 40px;
   height: 40px;

@@ -11,6 +11,8 @@
 <script>
 import $store from "../store/state-store";
 import io from 'socket.io-client';
+import router from "../main"
+
 
 
 export default {
@@ -24,17 +26,16 @@ export default {
         }
     },
     mounted() {
-        $store.state.socket.disconnect();
-        $store.commit("updateSocket", '');
 
         $store.state.nspSocket = io(`http://localhost:3500${this.$props.namespace}`);
+
         $store.state.nspSocket.on('connect', () => {
            $store.state.nspSocket.emit("user-ready", this.$props.name)
+           $store.commit("updateNspSocket", $store.state.nspSocket)
+
         })
-        $store.commit("updateNspSocket", $store.state.nspSocket)
 
         $store.state.nspSocket.on("match-info", (data) => {
-            console.log(data)
             for (let player in data) {
 
                 if (data[player].name !== this.$props.name) {
@@ -46,8 +47,15 @@ export default {
             this.loadingUsersIn = false
         })
 
-        $store.state.nspSocket.on("user-left", () => {
-            alert("USER DISCONNECTED")
+        $store.state.nspSocket.on("user-left", (data) => {
+            alert(`${this.opponent.name} has left the game`)
+            $store.state.socket.disconnect();
+            $store.state.nspSocket.disconnect();
+            $store.commit("updateUsersOnline", data)
+
+            router.push({
+                    name: "register"
+                })
             
         })
             

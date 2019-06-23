@@ -7,7 +7,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         socket: '',
-        nspSocket: ''
+        nspSocket: '',
+        usersOnline: 0
     },
     mutations: {
         updateSocket(state, payLoad) {
@@ -15,6 +16,9 @@ const store = new Vuex.Store({
         },
         updateNspSocket(state, payLoad) {
             state.nspSocket = payLoad;
+        },
+        updateUsersOnline(state, payLoad) {
+            state.usersOnline = payLoad;
         }
     }
 })
