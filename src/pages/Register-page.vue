@@ -1,6 +1,6 @@
 <template>
     <div>
-      <p>Currently {{ usersOnline }} players online</p>
+      <p v-if="!showConnectionError">Currently {{ usersOnline }} players online</p>
         <form id="registerSection" v-if="!searching && !playerFound && !showConnectionError"  v-on:submit.prevent>
             <h1>Please enter a username</h1>
             <input type="text" id="name" v-model="name">
@@ -13,7 +13,7 @@
           <div class="cube2"></div>
         </div>    
         <div id="playerFound" v-if="playerFound">You have matched with {{ opponent.name }}</div>
-        <div id="connectionError" v-if="showConnectionError" style="color: red">We ran into a problem connecting you to a match</div>
+        <div id="connectionError" v-if="showConnectionError" style="color: red">We ran into a problem connecting you with the servers</div>
 
     </div>
 </template>
@@ -39,10 +39,13 @@ export default {
     }
   },
   mounted() {
-      console.log("RUN")
           $store.state.socket = io('http://localhost:3500', {
                  reconnection: false,
             });
+
+          $store.state.socket.on("connect", () => {
+            $store.commit("updateSocket", $store.state.socket);
+          })
             
           $store.state.socket.on("connect_error", () => {
                 this.showConnectionError = true;
