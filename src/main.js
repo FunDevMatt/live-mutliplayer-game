@@ -14,8 +14,10 @@ const router = new VueRouter({
       component: RegisterPage
     },
     {
-      path: '/game',
-      component: GamePage
+      name: 'game',
+      path: '/game/:namespace',
+      component: GamePage,
+      props: true,
     }
   ]
 })
@@ -24,3 +26,5 @@ new Vue({
   router,
   render: h => h(App),
 }).$mount('#app')
+
+export default router;

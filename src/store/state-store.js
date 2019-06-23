@@ -6,7 +6,16 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        socket: ''
+        socket: '',
+        nspSocket: ''
+    },
+    mutations: {
+        updateSocket(state, payLoad) {
+            state.socket = payLoad
+        },
+        updateNspSocket(state, payLoad) {
+            state.nspSocket = payLoad;
+        }
     }
 })
 

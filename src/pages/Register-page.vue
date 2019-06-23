@@ -15,7 +15,8 @@
 
 <script>
 import io from 'socket.io-client';
-import Store from "../store/state-store";
+import $store from "../store/state-store";
+import router from "../main"
 
 export default {
   name: 'Register-page',
@@ -33,33 +34,30 @@ export default {
   },
   methods: {
     searchForGame() {
-            Store.state.socket = io('http://localhost:3500', {
+            $store.state.socket = io('http://localhost:3500', {
                  reconnection: false,
             });
 
 
-            Store.state.socket.on("connect_error", () => {
+            $store.state.socket.on("connect_error", () => {
                 this.showConnectionError = true;
             })
 
-            Store.state.socket.on("connect", () => {
-                Store.state.socket.on("opponent-found", (opponent) => {
+            $store.state.socket.on("connect", () => {
+                $store.state.socket.on("opponent-found", (opponent) => {
                 this.searching = false;
                 this.opponent = opponent
                 this.playerFound = true;
-                Store.state.socket.disconnect();
-                const nameSpaceSocket = io('http://localhost:3500' + opponent.nameSpace);
-
-                nameSpaceSocket.on("welcome", (data) => {
-                    alert("weclome to namespace " + data)
+                router.push({
+                    name: "game",
+                    params: {
+                        namespace: opponent.nameSpace,
+                        name: this.name
+                    }
                 })
-
-                nameSpaceSocket.on("user-left", () => {
-                    alert("USER HAS DISCONNECTED")
-                })
-                })
+            })
                 
-                Store.state.socket.emit("game-searching", this.name);
+                $store.state.socket.emit("game-searching", this.name);
                 this.searching = true;
             })
 
