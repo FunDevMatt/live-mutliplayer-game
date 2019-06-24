@@ -1,16 +1,22 @@
 <template>
     <main>
-        <p v-if="loadingUsersIn">Loading Game...</p>
-        <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
-        <div id="gameBoard" v-if="!loadingUsersIn"></div>
+        <div class="gameContent">
+            <p v-if="loadingUsersIn">Loading Game...</p>
+            <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
+            <div id="gameBoard" v-if="!loadingUsersIn">
+                <GameCanvas></GameCanvas>
+            </div>
 
-    </main>
+        </div>
+     </main>
 </template>
 
 
 <script>
 import $store from "../store/state-store";
 import io from 'socket.io-client';
+import { setTimeout } from 'timers';
+import GameCanvas from "../components/Game-Canvas";
 
 
 
@@ -23,6 +29,10 @@ export default {
             currentPlayer: '',
             opponent: '' 
         }
+    },
+    components: {
+        GameCanvas
+
     },
 
     mounted() {
@@ -49,7 +59,7 @@ export default {
         })
 
         $store.state.nspSocket.on("user-left", (data) => {
-            alert(`${this.opponent.name} has left the game`)
+        
             $store.state.socket.disconnect();
             $store.state.nspSocket.disconnect();
             $store.commit("updateUsersOnline", data)
@@ -57,7 +67,8 @@ export default {
             this.$router.push({
                     name: "register"
                 })
-            
+
+            alert(`${this.opponent.name} has left the game`)
         })
             
     }
@@ -67,16 +78,20 @@ export default {
 
 
 <style lang="scss" scoped>
-
-    #gameBoard {
+    main {
         height: 100vh;
-        background-color: blueviolet
-    }
+        background-color: blueviolet;
+        position: relative;
 
-    .box {
-        width: 80px;
-        height: 20px;
-        background-color: white;
+        .gameContent {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -60%)
+        }
+
+
+
     }
     
 

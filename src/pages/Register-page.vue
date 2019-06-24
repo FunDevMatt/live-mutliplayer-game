@@ -1,6 +1,6 @@
 <template>
     <main>
-      <p v-if="!showConnectionError">Currentl {{ usersOnline }} players online</p>
+      <p v-if="!showConnectionError">Currently {{ usersOnline }} players online</p>
         <form id="registerSection" v-if="!searching && !playerFound && !showConnectionError"  v-on:submit.prevent>
             <h1>Please enter a username</h1>
             <input type="text" id="name" v-model="name">
@@ -92,7 +92,7 @@ export default {
 }
 
 .cube1, .cube2 {
-  background-color: #333;
+  background-color: white;
   width: 15px;
   height: 15px;
   position: absolute;
