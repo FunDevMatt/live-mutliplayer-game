@@ -1,10 +1,10 @@
 <template>
-  <div id="app">
-    <transition>
+  <v-app>
+     <div id="app">
           <router-view></router-view>
-    </transition>
-
   </div>
+  </v-app>
+ 
 </template>
 
 <script>
@@ -16,6 +16,7 @@ export default {
 </script>
 
 <style>
+
 
 
 * {

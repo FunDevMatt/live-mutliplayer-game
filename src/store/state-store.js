@@ -8,7 +8,9 @@ const store = new Vuex.Store({
     state: {
         socket: '',
         nspSocket: '',
-        usersOnline: 0
+        usersOnline: 0,
+        showUserLeftMatchAlert: false,
+        opponent: ''
     },
     mutations: {
         updateSocket(state, payLoad) {
@@ -19,7 +21,14 @@ const store = new Vuex.Store({
         },
         updateUsersOnline(state, payLoad) {
             state.usersOnline = payLoad;
+        },
+        updateShowUserLeftMatchAlert(state, payLoad) {
+            state.showUserLeftMatchAlert = payLoad;
+        },
+        updateOpponent(state, payLoad) {
+            state.opponent = payLoad;
         }
+
     }
 })
 

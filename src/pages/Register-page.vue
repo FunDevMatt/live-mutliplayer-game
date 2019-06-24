@@ -1,11 +1,22 @@
 <template>
     <main>
+        <v-alert
+        :value="showUserLeftAlert"
+        type="warning"
+        transition="scale-transition"
+        :dismissible=true
+      > {{ latestOpponent.name}} has left the match</v-alert>
+
       <p v-if="!showConnectionError">Currently {{ usersOnline }} players online</p>
         <form id="registerSection" v-if="!searching && !playerFound && !showConnectionError"  v-on:submit.prevent>
             <h1>Please enter a username</h1>
             <input type="text" id="name" v-model="name">
             <br>
-            <button @click="searchForGame()">Search for game</button>
+            <v-btn @click="searchForGame()" color="danger">Search for game</v-btn>
+            <v-btn color="success">Success</v-btn>
+    <v-btn color="error">Error</v-btn>
+    <v-btn color="warning">Warning</v-btn>
+    <v-btn color="info">Info</v-btn>
         </form>
         <div id="searchingLoader" v-if="searching">Searching for a game....</div>
         <div class="spinner" v-if="searching">
@@ -19,7 +30,6 @@
 
 <script>
 import io from 'socket.io-client';
-import $store from "../store/state-store";
 
 export default {
   name: 'Register-page',
@@ -31,35 +41,38 @@ export default {
       searching: false,
       name: '',
       playerFound: false,
-      opponent: '',
+      latestOpponent: '',
       showConnectionError: false,
-      usersOnline: 0
+      usersOnline: 0,
+      showUserLeftAlert: false
     }
   },
   mounted() {
-          this.usersOnline = $store.state.usersOnline;
-          $store.state.socket = io('http://localhost:3500', {
+          this.latestOpponent = this.$store.state.opponent;
+          this.usersOnline = this.$store.state.usersOnline;
+          this.showUserLeftAlert = this.$store.state.showUserLeftMatchAlert;
+          this.$store.state.socket = io('http://localhost:3500', {
                  reconnection: false,
             });
 
-          $store.state.socket.on("connect", () => {
-            $store.commit("updateSocket", $store.state.socket);
+          this.$store.state.socket.on("connect", () => {
+            this.$store.commit("updateSocket", this.$store.state.socket);
           })
             
-          $store.state.socket.on("connect_error", () => {
+          this.$store.state.socket.on("connect_error", () => {
                 this.showConnectionError = true;
             })
 
-          $store.state.socket.on("users-online", (users) => {
+          this.$store.state.socket.on("users-online", (users) => {
                 this.usersOnline = users;
-                $store.commit("updateUsersOnline", users)
+                this.$store.commit("updateUsersOnline", users)
           })
   },
   methods: {
     searchForGame() {
-               $store.state.socket.on("opponent-found", (opponent) => {
+               this.$store.state.socket.on("opponent-found", (opponent) => {
+                this.$store.commit("updateShowUserLeftMatchAlert", false)
                 this.searching = false;
-                this.opponent = opponent
                 this.playerFound = true;
                 this.$router.push({
                     name: "game",
@@ -70,7 +83,7 @@ export default {
                 })
             })
                 
-            $store.state.socket.emit("game-searching", this.name);
+            this.$store.state.socket.emit("game-searching", this.name);
             this.searching = true;
 
             

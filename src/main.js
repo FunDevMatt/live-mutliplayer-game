@@ -4,9 +4,13 @@ import GamePage from './pages/Game-page.vue';
 import RegisterPage from './pages/Register-page.vue';
 import GameCanvas from "./components/Game-Canvas.vue";
 import VueRouter from 'vue-router'
+import Vuetify from 'vuetify';
+import store from "./store/state-store"
+
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
+Vue.use(Vuetify)
 
 
 const router = new VueRouter({
@@ -29,6 +33,7 @@ const router = new VueRouter({
   ]
 })
 
+import 'vuetify/dist/vuetify.min.css'
 
 // send user back to register page if they refresh
 // if (performance.navigation.type == 1) {
@@ -41,6 +46,7 @@ const router = new VueRouter({
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')
 

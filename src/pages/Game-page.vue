@@ -3,9 +3,9 @@
         <div class="gameContent">
             <p v-if="loadingUsersIn">Loading Game...</p>
             <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
-            <div id="gameBoard" v-if="!loadingUsersIn">
+            <!-- <div id="gameBoard" v-if="!loadingUsersIn">
                 <GameCanvas></GameCanvas>
-            </div>
+            </div> -->
 
         </div>
      </main>
@@ -27,7 +27,8 @@ export default {
         return {
             loadingUsersIn: true,
             currentPlayer: '',
-            opponent: '' 
+            opponent: '',
+            showLeftMatch: false
         }
     },
     components: {
@@ -38,19 +39,20 @@ export default {
     mounted() {
     
 
-        $store.state.nspSocket = io(`http://localhost:3500${this.$props.namespace}`);
+        this.$store.state.nspSocket = io(`http://localhost:3500${this.$props.namespace}`);
 
-        $store.state.nspSocket.on('connect', () => {
-           $store.state.nspSocket.emit("user-ready", this.$props.name)
-           $store.commit("updateNspSocket", $store.state.nspSocket)
+        this.$store.state.nspSocket.on('connect', () => {
+           this.$store.state.nspSocket.emit("user-ready", this.$props.name)
+           this.$store.commit("updateNspSocket", this.$store.state.nspSocket)
 
         })
 
-        $store.state.nspSocket.on("match-info", (data) => {
+        this.$store.state.nspSocket.on("match-info", (data) => {
             for (let player in data) {
 
                 if (data[player].name !== this.$props.name) {
                     this.opponent = data[player];
+                    this.$store.commit("updateOpponent", this.opponent);
                 } else {
                     this.currentPlayer = data[player]
                 }
@@ -58,17 +60,16 @@ export default {
             this.loadingUsersIn = false
         })
 
-        $store.state.nspSocket.on("user-left", (data) => {
+        this.$store.state.nspSocket.on("user-left", (data) => {
         
-            $store.state.socket.disconnect();
-            $store.state.nspSocket.disconnect();
-            $store.commit("updateUsersOnline", data)
+            this.$store.state.socket.disconnect();
+            this.$store.state.nspSocket.disconnect();
+            this.$store.commit("updateUsersOnline", data)
+            this.$store.commit("updateShowUserLeftMatchAlert", true)            
 
             this.$router.push({
                     name: "register"
                 })
-
-            alert(`${this.opponent.name} has left the game`)
         })
             
     }
