@@ -3,9 +3,12 @@
         <div class="gameContent">
             <p v-if="loadingUsersIn">Loading Game...</p>
             <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
-            <!-- <div id="gameBoard" v-if="!loadingUsersIn">
-                <GameCanvas></GameCanvas>
-            </div> -->
+             <form>
+      <textarea id="incoming"></textarea>
+      <button type="submit">submit</button>
+      <video src=""></video>
+    </form>
+    <pre id="outgoing"></pre>
 
         </div>
      </main>
@@ -17,6 +20,8 @@ import $store from "../store/state-store";
 import io from 'socket.io-client';
 import { setTimeout } from 'timers';
 import GameCanvas from "../components/Game-Canvas";
+
+
 
 
 
@@ -36,8 +41,40 @@ export default {
 
     },
 
-    mounted() {
-    
+    async mounted() {
+        var Peer = require('simple-peer')
+
+// get video/voice stream
+        navigator.getUserMedia({ video: true, audio: false }, gotMedia, () => {
+            console.log("USERS CONNECTED")
+        })
+
+        function gotMedia (stream) {
+            var peer1 = new Peer({ initiator: true, stream: stream })
+            var peer2 = new Peer({ stream: stream})
+
+            peer1.on('signal', data => {
+                peer2.signal(data)
+            })
+
+            peer2.on('signal', data => {
+                peer1.signal(data)
+            })
+
+            peer2.on('stream', stream => {
+                // got remote video stream, now let's show it in a video tag
+                var video = document.querySelector('video')
+                console.log(video)
+                if ('srcObject' in video) {
+                video.srcObject = stream
+                } else {
+                video.src = window.URL.createObjectURL(stream) // for older browsers
+                }
+                
+                video.play()
+            })
+            }
+
 
         this.$store.state.nspSocket = io(`http://localhost:3500${this.$props.namespace}`);
 

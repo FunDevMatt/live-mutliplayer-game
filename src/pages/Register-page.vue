@@ -51,7 +51,7 @@ export default {
           this.latestOpponent = this.$store.state.opponent;
           this.usersOnline = this.$store.state.usersOnline;
           this.showUserLeftAlert = this.$store.state.showUserLeftMatchAlert;
-          this.$store.state.socket = io('http://localhost:3500', {
+          this.$store.state.socket = io('https://meet-a-dev-server.herokuapp.com/', {
                  reconnection: false,
             });
 
