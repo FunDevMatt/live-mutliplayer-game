@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@vue/cli": "^3.8.4",
     "animate.css": "^3.7.2",
     "core-js": "^2.6.5",
     "jest": "^24.8.0",
