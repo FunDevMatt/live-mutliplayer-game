@@ -13,10 +13,6 @@
             <input type="text" id="name" v-model="name">
             <br>
             <v-btn @click="searchForGame()" color="danger">Search for game</v-btn>
-            <v-btn color="success">Success</v-btn>
-    <v-btn color="error">Error</v-btn>
-    <v-btn color="warning">Warning</v-btn>
-    <v-btn color="info">Info</v-btn>
         </form>
         <div id="searchingLoader" v-if="searching">Searching for a game....</div>
         <div class="spinner" v-if="searching">
@@ -51,7 +47,7 @@ export default {
           this.latestOpponent = this.$store.state.opponent;
           this.usersOnline = this.$store.state.usersOnline;
           this.showUserLeftAlert = this.$store.state.showUserLeftMatchAlert;
-          this.$store.state.socket = io('https://meet-a-dev-server.herokuapp.com/', {
+          this.$store.state.socket = io('http://localhost:3500', {
                  reconnection: false,
             });
 

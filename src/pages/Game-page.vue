@@ -3,24 +3,30 @@
         <div class="gameContent">
             <p v-if="loadingUsersIn">Loading Game...</p>
             <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
-             <form>
-      <textarea id="incoming"></textarea>
-      <button type="submit">submit</button>
-      <video src=""></video>
-    </form>
-    <pre id="outgoing"></pre>
-
+            <div v-if="!loadingUsersIn" id="chatBox">
+                <div id="messages">
+                    <p v-for="(message, index) in messages" :key="index">
+                        <span v-if="message.username === currentPlayer.name">You: </span>
+                        <span v-if="message.username !== currentPlayer.name">{{ message.username }}: </span>
+                        {{ message.text }}
+                    </p>
+                </div>
+                <div id="send">
+                    <div id="messageDiv">
+                        <input v-model="message" type="text" id="messageInput">
+                    </div>
+                    <div id="sendDiv">
+                        <button @click="sendMessage()">OK</button>
+                    </div>
+                </div>
+            </div>
         </div>
      </main>
 </template>
 
 
 <script>
-import $store from "../store/state-store";
 import io from 'socket.io-client';
-import { setTimeout } from 'timers';
-import GameCanvas from "../components/Game-Canvas";
-
 
 
 
@@ -33,49 +39,16 @@ export default {
             loadingUsersIn: true,
             currentPlayer: '',
             opponent: '',
-            showLeftMatch: false
+            showLeftMatch: false,
+            message: '',
+            messages: []
         }
     },
     components: {
-        GameCanvas
 
     },
 
     async mounted() {
-        var Peer = require('simple-peer')
-
-// get video/voice stream
-        navigator.getUserMedia({ video: true, audio: false }, gotMedia, () => {
-            console.log("USERS CONNECTED")
-        })
-
-        function gotMedia (stream) {
-            var peer1 = new Peer({ initiator: true, stream: stream })
-            var peer2 = new Peer({ stream: stream})
-
-            peer1.on('signal', data => {
-                peer2.signal(data)
-            })
-
-            peer2.on('signal', data => {
-                peer1.signal(data)
-            })
-
-            peer2.on('stream', stream => {
-                // got remote video stream, now let's show it in a video tag
-                var video = document.querySelector('video')
-                console.log(video)
-                if ('srcObject' in video) {
-                video.srcObject = stream
-                } else {
-                video.src = window.URL.createObjectURL(stream) // for older browsers
-                }
-                
-                video.play()
-            })
-            }
-
-
         this.$store.state.nspSocket = io(`http://localhost:3500${this.$props.namespace}`);
 
         this.$store.state.nspSocket.on('connect', () => {
@@ -94,7 +67,14 @@ export default {
                     this.currentPlayer = data[player]
                 }
             }
-            this.loadingUsersIn = false
+            this.loadingUsersIn = false;
+    
+
+        })
+
+
+        this.$store.state.nspSocket.on("message-received", (message) => {
+            this.messages.push(message);         
         })
 
         this.$store.state.nspSocket.on("user-left", (data) => {
@@ -108,7 +88,15 @@ export default {
                     name: "register"
                 })
         })
+
+
             
+    },
+    methods: {
+        sendMessage() {
+            this.$store.state.nspSocket.emit("message-sent", this.message)
+
+        }
     }
     
 }
@@ -126,6 +114,33 @@ export default {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -60%)
+        }
+
+        #chatBox {
+            width: 400px;
+            height: 500px;
+            background-color: white;
+        }
+
+        #messages {
+            width: 100%;
+            height: 450px;
+        }
+
+        #send {
+            width: 100%;
+            height: 50px;
+            border: 1px solid black;
+            display: flex;
+            align-items: center;
+        }
+
+        #messageDiv {
+            flex: 3
+        }
+
+        #sendDiv {
+            flex: 1;
         }
 
 
