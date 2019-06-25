@@ -20,6 +20,9 @@
                     </div>
                 </div>
             </div>
+            <video id="myVideo"></video>
+            <video id="matchVideo"></video>
+
         </div>
      </main>
 </template>
@@ -27,6 +30,8 @@
 
 <script>
 import io from 'socket.io-client';
+import ss from "socket.io-stream";
+import { setTimeout } from 'timers';
 
 
 
@@ -49,13 +54,25 @@ export default {
     },
 
     async mounted() {
+        let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true});
+
+        let myVideo = document.querySelector("#myVideo");
+        let matchVideo = document.querySelector("#matchVideo");
+
+        myVideo.srcObject = stream;
+
         this.$store.state.nspSocket = io(`http://localhost:3500${this.$props.namespace}`);
 
         this.$store.state.nspSocket.on('connect', () => {
-           this.$store.state.nspSocket.emit("user-ready", this.$props.name)
-           this.$store.commit("updateNspSocket", this.$store.state.nspSocket)
+           this.$store.state.nspSocket.emit("user-ready", this.$props.name);
+           this.$store.commit("updateNspSocket", this.$store.state.nspSocket);
 
+           myVideo.play();
+
+        
         })
+
+
 
         this.$store.state.nspSocket.on("match-info", (data) => {
             for (let player in data) {
