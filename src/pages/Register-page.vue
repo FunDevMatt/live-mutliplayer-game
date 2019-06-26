@@ -141,7 +141,7 @@ export default {
 
 main {
   height: 100vh;
-  background-color: blueviolet
+  background-color: green;
 }
 
 </style>
