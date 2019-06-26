@@ -7,6 +7,7 @@
         :dismissible=true
       > {{ latestOpponent.name}} has left the match</v-alert>
 
+      <Test />
       <p v-if="!showConnectionError">Currently {{ usersOnline }} players online</p>
         <form id="registerSection" v-if="!searching && !playerFound && !showConnectionError"  v-on:submit.prevent>
             <h1>Please enter a username</h1>
@@ -29,9 +30,6 @@ import io from 'socket.io-client';
 
 export default {
   name: 'Register-page',
-  components: {
-    
-  },
   data() {
     return {
       searching: false,
@@ -40,10 +38,10 @@ export default {
       latestOpponent: '',
       showConnectionError: false,
       usersOnline: 0,
-      showUserLeftAlert: false
+      showUserLeftAlert: false,
     }
   },
-  mounted() {
+  async mounted() {
           this.latestOpponent = this.$store.state.opponent;
           this.usersOnline = this.$store.state.usersOnline;
           this.showUserLeftAlert = this.$store.state.showUserLeftMatchAlert;

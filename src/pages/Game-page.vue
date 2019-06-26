@@ -30,8 +30,8 @@
 
 <script>
 import io from 'socket.io-client';
-import ss from "socket.io-stream";
-import { setTimeout } from 'timers';
+import { mapState } from 'vuex'
+
 
 
 
@@ -52,8 +52,8 @@ export default {
     components: {
 
     },
-
-    async mounted() {
+    computed: mapState(['test']),
+    async mounted() {     
         let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true});
 
         let myVideo = document.querySelector("#myVideo");
