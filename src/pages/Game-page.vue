@@ -30,8 +30,8 @@
 
 <script>
 import io from 'socket.io-client';
-import ss from "socket.io-stream";
-import { setTimeout } from 'timers';
+import { mapState } from 'vuex'
+
 
 
 
@@ -49,32 +49,29 @@ export default {
             messages: []
         }
     },
-    components: {
-
-    },
+    computed: mapState(['nspSocket', 'socket', 'usersOnline']),
 
     async mounted() {
-        let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true});
+        // let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true});
+    
+        // let myVideo = document.querySelector("#myVideo");
+        // let matchVideo = document.querySelector("#matchVideo");
 
-        let myVideo = document.querySelector("#myVideo");
-        let matchVideo = document.querySelector("#matchVideo");
+        // myVideo.srcObject = stream;
 
-        myVideo.srcObject = stream;
+        let nspSocketConnection = await io(`${process.env.VUE_APP_SERVER_URL}${this.$props.namespace}`);
+        this.$store.commit("updateNspSocket", nspSocketConnection);
 
-        this.$store.state.nspSocket = io(`http://localhost:3500${this.$props.namespace}`);
+        this.nspSocket.on('connect', () => {
+           this.nspSocket.emit("user-ready", this.$props.name);
+           this.$store.commit("updateNspSocket", this.nspSocket);
 
-        this.$store.state.nspSocket.on('connect', () => {
-           this.$store.state.nspSocket.emit("user-ready", this.$props.name);
-           this.$store.commit("updateNspSocket", this.$store.state.nspSocket);
-
-           myVideo.play();
-
-        
+        //    myVideo.play();
         })
 
 
 
-        this.$store.state.nspSocket.on("match-info", (data) => {
+        this.nspSocket.on("match-info", (data) => {
             for (let player in data) {
 
                 if (data[player].name !== this.$props.name) {
@@ -90,15 +87,15 @@ export default {
         })
 
 
-        this.$store.state.nspSocket.on("message-received", (message) => {
+        this.nspSocket.on("message-received", (message) => {
             this.messages.push(message);         
         })
 
-        this.$store.state.nspSocket.on("user-left", (data) => {
-        
-            this.$store.state.socket.disconnect();
-            this.$store.state.nspSocket.disconnect();
-            this.$store.commit("updateUsersOnline", data)
+        this.nspSocket.on("user-left", (data) => {
+            let socketConnection = this.socket;
+            socketConnection.disconnect();
+            nspSocketConnection.disconnect();
+
             this.$store.commit("updateShowUserLeftMatchAlert", true)            
 
             this.$router.push({
@@ -111,7 +108,7 @@ export default {
     },
     methods: {
         sendMessage() {
-            this.$store.state.nspSocket.emit("message-sent", this.message)
+            this.nspSocket.emit("message-sent", this.message)
 
         }
     }

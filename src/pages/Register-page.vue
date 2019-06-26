@@ -26,6 +26,9 @@
 
 <script>
 import io from 'socket.io-client';
+import { mapState } from 'vuex'
+
+
 
 export default {
   name: 'Register-page',
@@ -39,34 +42,29 @@ export default {
       playerFound: false,
       latestOpponent: '',
       showConnectionError: false,
-      usersOnline: 0,
       showUserLeftAlert: false
     }
   },
-  mounted() {
+  computed: mapState(['socket', 'nspSocket', 'usersOnline']),
+  async mounted() {
           this.latestOpponent = this.$store.state.opponent;
-          this.usersOnline = this.$store.state.usersOnline;
           this.showUserLeftAlert = this.$store.state.showUserLeftMatchAlert;
-          this.$store.state.socket = io('http://localhost:3500', {
+          let socketConnection = await io(process.env.VUE_APP_SERVER_URL, {
                  reconnection: false,
-            });
+          });
+          this.$store.commit("updateSocket", socketConnection);
 
-          this.$store.state.socket.on("connect", () => {
-            this.$store.commit("updateSocket", this.$store.state.socket);
-          })
-            
-          this.$store.state.socket.on("connect_error", () => {
+          this.socket.on("connect_error", () => {
                 this.showConnectionError = true;
             })
 
-          this.$store.state.socket.on("users-online", (users) => {
-                this.usersOnline = users;
-                this.$store.commit("updateUsersOnline", users)
+          this.socket.on("users-online", (users) => {
+              this.$store.commit("updateUsersOnline", users);
           })
   },
   methods: {
     searchForGame() {
-               this.$store.state.socket.on("opponent-found", (opponent) => {
+                this.socket.on("opponent-found", (opponent) => {
                 this.$store.commit("updateShowUserLeftMatchAlert", false)
                 this.searching = false;
                 this.playerFound = true;
@@ -79,7 +77,7 @@ export default {
                 })
             })
                 
-            this.$store.state.socket.emit("game-searching", this.name);
+            this.socket.emit("game-searching", this.name);
             this.searching = true;
 
             
