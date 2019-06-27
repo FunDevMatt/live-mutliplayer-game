@@ -134,12 +134,12 @@ export default {
             var call = peer.call(peerId, stream)
             console.log("MAKING CALL")
 
-            call.on('stream', (matchStream) => {
-                console.log("RECEIVING OTHER USER STREAM: " + stream)
-                myVideo.srcObject = stream;
-                matchVideo.srcObject = matchStream;
+            // call.on('stream', (matchStream) => {
+            //     console.log("RECEIVING OTHER USER STREAM: " + stream)
+            //     myVideo.srcObject = stream;
+            //     matchVideo.srcObject = matchStream;
 
-            })
+            // })
 
         })
 
