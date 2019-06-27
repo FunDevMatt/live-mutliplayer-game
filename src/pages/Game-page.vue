@@ -22,10 +22,8 @@
                     </div>
                 </div>
             </div>
-            <div v-if="showVideos">
                 <video id="myVideo"></video>
                 <video id="matchVideo"></video>
-            </div>
     
 
         </div>
