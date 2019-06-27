@@ -53,8 +53,7 @@ export default {
             message: '',
             messages: [],
             peerConnections: '',
-            showVideos: false,
-            callStarter: false
+            showVideos: false
         }
     },
     computed: mapState(['nspSocket', 'socket', 'usersOnline']),
@@ -131,13 +130,13 @@ export default {
         this.nspSocket.on("peer-connections", (data) => {
             console.log("CONNECTED")
 
-            this.callStarter = true;
             this.peerConnections = data;
             
             let peerId = this.peerConnections[this.opponent.name];
             var call = peer.call(peerId, stream)
 
             call.on('stream', (matchStream) => {
+                console.log(matchStream)
                 console.log(matchStream)
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
@@ -152,7 +151,6 @@ export default {
 
        
         peer.on('call', (call) => {
-             if (!this.callStarter) {
                 call.answer(stream);
                 call.on('stream', (matchStream) => {
                 console.log("STREAM ON ANSWER")
@@ -163,7 +161,7 @@ export default {
                 matchVideo.play();
                 this.showVideos = true;
 
-            })}
+
           
         }, (err) => {
             console.log(err)
