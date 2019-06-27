@@ -127,11 +127,13 @@ export default {
         })
 
         this.nspSocket.on("peer-connections", (data) => {
+            console.log("RECEIVED PEER CONNECTIONS: " + data)
             this.peerConnections = data;
             
             let peerId = this.peerConnections[this.opponent.name];
             var call = peer.call(peerId, stream)
             call.on('stream', (matchStream) => {
+                console.log("RECEIVING OTHER USER STREAM: " + stream)
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
 
@@ -142,6 +144,8 @@ export default {
         peer.on('call', function(call) {
                 call.answer(stream);
                 call.on('stream', (matchStream) => {
+                console.log("RECEIVING OTHER USER STREAM: " + stream)
+
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
                 this.showVideos = true;
