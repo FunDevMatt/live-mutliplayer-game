@@ -2,6 +2,8 @@
     <main>
         <div class="gameContent">
             <p v-if="loadingUsersIn">Loading Game...</p>
+            <p v-if="!showVideos">Loading webcams</p>
+
             <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
             <div v-if="!loadingUsersIn" id="chatBox">
                 <div id="messages">
@@ -20,8 +22,11 @@
                     </div>
                 </div>
             </div>
-            <video id="myVideo"></video>
-            <video id="matchVideo"></video>
+            <div v-if="showVideos">
+                <video id="myVideo"></video>
+                <video id="matchVideo"></video>
+            </div>
+    
 
         </div>
      </main>
@@ -47,7 +52,8 @@ export default {
             showLeftMatch: false,
             message: '',
             messages: [],
-            peerConnections: ''
+            peerConnections: '',
+            showVideos: false
         }
     },
     computed: mapState(['nspSocket', 'socket', 'usersOnline']),
@@ -115,6 +121,8 @@ export default {
                 matchVideo.srcObject = matchStream;
                 myVideo.play();
                 matchVideo.play();
+                this.showVideos = true;
+
 
             })
 
@@ -127,6 +135,7 @@ export default {
                 matchVideo.srcObject = matchStream;
                 myVideo.play();
                 matchVideo.play();
+                this.showVideos = true;
 
             })
         });
