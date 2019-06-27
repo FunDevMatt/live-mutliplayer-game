@@ -2,7 +2,7 @@
     <main>
         <div class="gameContent">
             <p v-if="loadingUsersIn">Loading Game...</p>
-
+            <p v-if="!showVideos">Loading webcams</p>
 
             <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
             <div v-if="!loadingUsersIn" id="chatBox">
@@ -23,8 +23,10 @@
                 </div>
             </div>
             <div id="videoContainer">
-                
-             </div>
+                <video muted autoplay id="myVideo"></video>
+                <video muted autoplay id="matchVideo"></video>
+
+            </div>
 
         </div>
      </main>
@@ -51,6 +53,7 @@ export default {
             message: '',
             messages: [],
             peerConnections: '',
+            showVideos: false
         }
     },
     computed: mapState(['nspSocket', 'socket', 'usersOnline']),
@@ -132,38 +135,24 @@ export default {
             console.log("MAKING CALL")
 
             call.on('stream', (matchStream) => {
-                var myVideo = document.createElement('video');
+                console.log("RECEIVING OTHER USER STREAM: " + stream)
                 myVideo.srcObject = stream;
-                var matchVideo = document.createElement('video');
                 matchVideo.srcObject = matchStream;
-                
-                myVideo.autoplay = true;
-                matchVideo.autoplay = true;
-
-                let videoDiv = document.querySelector("#videoContainer");
-                videoDiv.appendChild(myVideo);
-                videoDiv.appendChild(matchVideo);
 
             })
 
         })
 
-        peer.on('call', function(call) {
+        peer.on('call', (call) => {
             console.log("ANSWER CALL")
                 call.answer(stream);
                 call.on('stream', (matchStream) => {
                 console.log("RECEIVING OTHER USER STREAM: " + stream)
-                var myVideo = document.createElement('video');
-                myVideo.srcObject = stream;
-                var matchVideo = document.createElement('video');
-                matchVideo.srcObject = matchStream;
-                
-                myVideo.autoplay = true;
-                matchVideo.autoplay = true;
 
-                let videoDiv = document.querySelector("#videoContainer");
-                videoDiv.appendChild(myVideo);
-                videoDiv.appendChild(matchVideo);
+                myVideo.srcObject = stream;
+                matchVideo.srcObject = matchStream;
+                this.showVideos = true;
+
             })
         });
 
