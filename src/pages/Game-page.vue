@@ -135,7 +135,7 @@ export default {
             var call = peer.call(peerId, stream)
 
             call.on('stream', (matchStream) => {
-                console.log(matchStream)
+                console.log("STREAM UNDER CALL")
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
 
@@ -148,7 +148,7 @@ export default {
              if (!this.callStarter) {
                 call.answer(stream);
                 call.on('stream', (matchStream) => {
-                console.log(matchStream)
+                console.log("STREAM ON ANSWER")
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
                 this.showVideos = true;
