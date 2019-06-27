@@ -72,8 +72,15 @@ export default {
         //                         {urls: ['stun1.l.google.com:19302', 'stun2.l.google.com:19302', 'stun3.l.google.com:19302', 'stun4.l.google.com:19302', 'stun.stunprotocol.org:3478']},
         //                     ]}});
         var peer = new Peer({key: 'lwjd5qra8257b9', config: {'iceServers': [
-            {url: 'numb.viagenie.ca', username: 'rich.matthewJ@gmail.com'}
-        ]}});
+            {
+            "url": "stun:global.stun:3478?transport=udp"
+            },
+            {
+            "credential": "5SR2x8mZK1lTFJW3NVgLGw6UM9C0dja4jI/Hdw3xr+w=",
+            "url": "turn:global.turn:3478?transport=udp",
+            "username": "cda92e5006c7810494639fc466ecc80182cef8183fdf400f84c4126f3b59d0bb"
+            }
+        ],}});
 
             //  var peer = new Peer({key: 'lwjd5qra8257b9'});
 
