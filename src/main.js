@@ -30,11 +30,11 @@ const router = new VueRouter({
 import 'vuetify/dist/vuetify.min.css'
 
 // send user back to register page if they refresh
-// if (performance.navigation.type == 1) {
-//   router.push({
-//     name: "register"
-//   })
-// }
+if (performance.navigation.type == 1) {
+  router.push({
+    name: "register"
+  })
+}
 
 
 

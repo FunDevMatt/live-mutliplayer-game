@@ -98,6 +98,7 @@ export default {
 
 
         peer.on('open', id => {
+            console.log(id)
             this.nspSocket.emit("peer-id", {
                 peerId: id,
                 name: this.$props.name
@@ -128,6 +129,8 @@ export default {
         })
 
         this.nspSocket.on("peer-connections", (data) => {
+            console.log(data)
+
             this.callStarter = true;
             this.peerConnections = data;
             
@@ -135,7 +138,7 @@ export default {
             var call = peer.call(peerId, stream)
 
             call.on('stream', (matchStream) => {
-                console.log("STREAM UNDER CALL")
+                console.log(matchStream)
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
 
@@ -149,6 +152,7 @@ export default {
                 call.answer(stream);
                 call.on('stream', (matchStream) => {
                 console.log("STREAM ON ANSWER")
+                console.log(matchStream)
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
                 this.showVideos = true;
@@ -163,7 +167,7 @@ export default {
             nspSocketConnection.disconnect();
 
             this.$store.commit("updateShowUserLeftMatchAlert", true);
-            stream.stop();      
+            stream.getTracks().forEach(track => track.stop())
 
             this.$router.push({
                     name: "register"
