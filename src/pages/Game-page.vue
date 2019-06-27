@@ -46,18 +46,19 @@ export default {
             opponent: '',
             showLeftMatch: false,
             message: '',
-            messages: []
+            messages: [],
+            peerConnections: ''
         }
     },
     computed: mapState(['nspSocket', 'socket', 'usersOnline']),
 
     async mounted() {
-        // let stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true});
-    
-        // let myVideo = document.querySelector("#myVideo");
-        // let matchVideo = document.querySelector("#matchVideo");
+        var peer = new Peer({key: 'lwjd5qra8257b9'});
 
-        // myVideo.srcObject = stream;
+        let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true});
+
+        let myVideo = document.querySelector("#myVideo");
+        let matchVideo = document.querySelector("#matchVideo");
 
         let nspSocketConnection = await io(`${process.env.VUE_APP_SERVER_URL}${this.$props.namespace}`);
         this.$store.commit("updateNspSocket", nspSocketConnection);
@@ -66,8 +67,17 @@ export default {
            this.nspSocket.emit("user-ready", this.$props.name);
            this.$store.commit("updateNspSocket", this.nspSocket);
 
-        //    myVideo.play();
         })
+
+
+
+        peer.on('open', id => {
+            this.nspSocket.emit("peer-id", {
+                peerId: id,
+                name: this.$props.name
+            });
+        })
+
 
 
 
@@ -91,7 +101,33 @@ export default {
             this.messages.push(message);         
         })
 
-        this.nspSocket.on("user-left", (data) => {
+        this.nspSocket.on("peer-connections", (data) => {
+            this.peerConnections = data;
+            
+            let peerId = this.peerConnections[this.opponent.name];
+            var call = peer.call(peerId, stream)
+            call.on('stream', (matchStream) => {
+                myVideo.srcObject = stream;
+                matchVideo.srcObject = matchStream;
+                myVideo.play();
+                matchVideo.play();
+
+            })
+
+        })
+
+        peer.on('call', function(call) {
+                call.answer(stream);
+                call.on('stream', (matchStream) => {
+                myVideo.srcObject = stream;
+                matchVideo.srcObject = matchStream;
+                myVideo.play();
+                matchVideo.play();
+
+            })
+        });
+
+        this.nspSocket.on("user-left", () => {
             let socketConnection = this.socket;
             socketConnection.disconnect();
             nspSocketConnection.disconnect();
