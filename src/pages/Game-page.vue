@@ -156,7 +156,8 @@ export default {
             socketConnection.disconnect();
             nspSocketConnection.disconnect();
 
-            this.$store.commit("updateShowUserLeftMatchAlert", true)            
+            this.$store.commit("updateShowUserLeftMatchAlert", true);
+            stream.stop()           
 
             this.$router.push({
                     name: "register"
