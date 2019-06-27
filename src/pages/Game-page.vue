@@ -71,7 +71,9 @@ export default {
         //                     config: {'iceServers': [
         //                         {urls: ['stun1.l.google.com:19302', 'stun2.l.google.com:19302', 'stun3.l.google.com:19302', 'stun4.l.google.com:19302', 'stun.stunprotocol.org:3478']},
         //                     ]}});
-        var peer = new Peer({key: 'lwjd5qra8257b9', config: {'iceServers': freeice()}});
+        var peer = new Peer({key: 'lwjd5qra8257b9', config: {'iceServers': [
+            {url: 'numb.viagenie.ca', username: 'rich.matthewJ@gmail.com'}
+        ]}});
 
             //  var peer = new Peer({key: 'lwjd5qra8257b9'});
 
