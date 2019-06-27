@@ -36,6 +36,8 @@
 <script>
 import io from 'socket.io-client';
 import { mapState } from 'vuex'
+import freeice from 'freeice';
+
 
 
 
@@ -71,7 +73,7 @@ export default {
         //                     ]}});
         var peer = new Peer({
   config: {key: 'lwjd5qra8257b9', config: {'iceServers': [
-     { urls: 'stun.l.google.com:19302' }
+     { urls: freeice() }
     ]}} /* Sample servers, please use appropriate ones */
 });
 
