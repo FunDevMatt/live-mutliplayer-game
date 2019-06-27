@@ -78,7 +78,7 @@ export default {
 
         var peer = new Peer({key: 'lwjd5qra8257b9',
                             config: {'iceServers': [
-                                 { urls: 'stun:stun1.l.google.com:19302' } 
+                                 { 'urls': ['stun:stun1.l.google.com:19302'] } 
                             ]
                             }});
 
