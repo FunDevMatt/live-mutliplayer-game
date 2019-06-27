@@ -69,6 +69,10 @@ export default {
 
         })
 
+        this.nspSocket.on("connect_error", (e) => {
+            console.log(e)
+        })
+
 
 
         peer.on('open', id => {
