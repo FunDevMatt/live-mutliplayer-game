@@ -2,7 +2,7 @@
     <main>
         <div class="gameContent">
             <p v-if="loadingUsersIn">Loading Game...</p>
-            <p v-if="!showVideos">Loading webcams</p>
+
 
             <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
             <div v-if="!loadingUsersIn" id="chatBox">
@@ -23,10 +23,8 @@
                 </div>
             </div>
             <div id="videoContainer">
-                <video muted autoplay id="myVideo"></video>
-                <video muted autoplay id="matchVideo"></video>
-
-            </div>
+                
+             </div>
 
         </div>
      </main>
@@ -53,7 +51,6 @@ export default {
             message: '',
             messages: [],
             peerConnections: '',
-            showVideos: false
         }
     },
     computed: mapState(['nspSocket', 'socket', 'usersOnline']),
@@ -134,12 +131,21 @@ export default {
             var call = peer.call(peerId, stream)
             console.log("MAKING CALL")
 
-            // call.on('stream', (matchStream) => {
-            //     console.log("RECEIVING OTHER USER STREAM: " + stream)
-            //     myVideo.srcObject = stream;
-            //     matchVideo.srcObject = matchStream;
+            call.on('stream', (matchStream) => {
+                console.log("RECEIVING OTHER USER STREAM: " + stream)
+                var myVideo = document.createElement('video');
+                video.srcObject = stream;
+                var matchVideo = document.createElement('video');
+                matchVideo.srcObject = matchStream;
+                
+                myVideo.autoplay = true;
+                matchVideo.autoplay = true;
 
-            // })
+                let videoDiv = document.querySelector("#videoContainer");
+                videoDiv.appendChild(myVideo);
+                videoDiv.appendChild(matchVideo);
+
+            })
 
         })
 
@@ -148,11 +154,17 @@ export default {
                 call.answer(stream);
                 call.on('stream', (matchStream) => {
                 console.log("RECEIVING OTHER USER STREAM: " + stream)
-
-                myVideo.srcObject = stream;
+                var myVideo = document.createElement('video');
+                video.srcObject = stream;
+                var matchVideo = document.createElement('video');
                 matchVideo.srcObject = matchStream;
-                this.showVideos = true;
+                
+                myVideo.autoplay = true;
+                matchVideo.autoplay = true;
 
+                let videoDiv = document.querySelector("#videoContainer");
+                videoDiv.appendChild(myVideo);
+                videoDiv.appendChild(matchVideo);
             })
         });
 
