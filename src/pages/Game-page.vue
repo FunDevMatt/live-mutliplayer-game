@@ -70,8 +70,7 @@ export default {
         //                     ]}});
         var peer = new Peer({
   config: {key: 'lwjd5qra8257b9', config: {'iceServers': [
-     { url: 'stun3.l.google.com:19302' },
-    { url: 'stun4.l.google.com:19302'}
+     { urls: 'stun3.l.google.com:19302' }
     ]}} /* Sample servers, please use appropriate ones */
 });
 
