@@ -23,8 +23,8 @@
                 </div>
             </div>
             <div id="videoContainer">
-                <video muted autoplay id="myVideo"></video>
-                <video muted autoplay id="matchVideo"></video>
+                <video autoplay id="myVideo"></video>
+                <video autoplay id="matchVideo"></video>
 
             </div>
 
@@ -133,6 +133,8 @@ export default {
             var call = peer.call(peerId, stream)
 
             call.on('stream', (matchStream) => {
+                console.log(matchStream)
+
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
 
@@ -143,6 +145,7 @@ export default {
         peer.on('call', (call) => {
                 call.answer(stream);
                 call.on('stream', (matchStream) => {
+                    console.log(matchStream)
 
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
@@ -157,7 +160,7 @@ export default {
             nspSocketConnection.disconnect();
 
             this.$store.commit("updateShowUserLeftMatchAlert", true);
-            stream.stop()           
+            stream.stop();      
 
             this.$router.push({
                     name: "register"
