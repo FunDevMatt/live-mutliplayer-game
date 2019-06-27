@@ -36,7 +36,6 @@
 <script>
 import io from 'socket.io-client';
 import { mapState } from 'vuex'
-import freeice from 'freeice';
 
 
 
@@ -63,6 +62,9 @@ export default {
         let myVideo = document.querySelector("#myVideo");
         let matchVideo = document.querySelector("#matchVideo");
 
+
+
+
         navigator.getUserMedia = navigator.getUserMedia ||
                          navigator.webkitGetUserMedia ||
                          navigator.mozGetUserMedia;
@@ -71,16 +73,14 @@ export default {
         //                     config: {'iceServers': [
         //                         {urls: ['stun1.l.google.com:19302', 'stun2.l.google.com:19302', 'stun3.l.google.com:19302', 'stun4.l.google.com:19302', 'stun.stunprotocol.org:3478']},
         //                     ]}});
-        var peer = new Peer({key: 'lwjd5qra8257b9', config: {'iceServers': [
-            {
-            "url": "stun:global.stun:3478?transport=udp"
-            },
-            {
-            "credential": "5SR2x8mZK1lTFJW3NVgLGw6UM9C0dja4jI/Hdw3xr+w=",
-            "url": "turn:global.turn:3478?transport=udp",
-            "username": "cda92e5006c7810494639fc466ecc80182cef8183fdf400f84c4126f3b59d0bb"
-            }
-        ],}});
+
+
+
+        var peer = new Peer({key: 'lwjd5qra8257b9',
+                            config: {'iceServers': [
+                                 { urls: 'stun:stun1.l.google.com:19302' } 
+                            ]
+                            }});
 
             //  var peer = new Peer({key: 'lwjd5qra8257b9'});
 
@@ -134,7 +134,6 @@ export default {
         })
 
         this.nspSocket.on("peer-connections", (data) => {
-            console.log("CONNECTED")
 
             this.peerConnections = data;
             
@@ -142,8 +141,6 @@ export default {
             var call = peer.call(peerId, stream)
 
             call.on('stream', (matchStream) => {
-                console.log(matchStream)
-                console.log(matchStream)
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
                 myVideo.play();
@@ -159,8 +156,6 @@ export default {
         peer.on('call', (call) => {
                 call.answer(stream);
                 call.on('stream', (matchStream) => {
-                console.log("STREAM ON ANSWER")
-                console.log(matchStream)
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
                 myVideo.play();
