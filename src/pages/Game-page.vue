@@ -23,8 +23,8 @@
                 </div>
             </div>
             <div id="videoContainer">
-                <video autoplay id="myVideo"></video>
-                <video autoplay id="matchVideo"></video>
+                <video id="myVideo"></video>
+                <video id="matchVideo"></video>
 
             </div>
 
@@ -141,7 +141,11 @@ export default {
                 console.log(matchStream)
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
+                myVideo.play();
+                matchVideo.play();
 
+            }, err => {
+                console.log(err)
             })
 
         })
@@ -155,10 +159,14 @@ export default {
                 console.log(matchStream)
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
+                myVideo.play();
+                matchVideo.play();
                 this.showVideos = true;
 
             })}
           
+        }, (err) => {
+            console.log(err)
         });
 
         peer.on('error', function(err) {
