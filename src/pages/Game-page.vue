@@ -64,9 +64,10 @@ export default {
                          navigator.webkitGetUserMedia ||
                          navigator.mozGetUserMedia;
 
-        var peer = new Peer({key: 'lwjd5qra8257b9'}, {config: {'iceServers': [
-               { url: 'stun:stun.l.google.com:19302' }
-        ]}});
+        var peer = new Peer({key: 'lwjd5qra8257b9',
+                            config: {'iceServers': [
+                                {url: 'numb.viagenie.ca', username: 'rich.matthewJ@gmail.com', password: 'blah'}
+                            ]}});
 
         let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true});
 
