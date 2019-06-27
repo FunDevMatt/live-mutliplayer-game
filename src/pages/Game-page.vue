@@ -132,7 +132,6 @@ export default {
             console.log("MAKING CALL")
 
             call.on('stream', (matchStream) => {
-                console.log("RECEIVING OTHER USER STREAM: " + stream)
                 var myVideo = document.createElement('video');
                 myVideo.srcObject = stream;
                 var matchVideo = document.createElement('video');
