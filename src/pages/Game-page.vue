@@ -64,10 +64,18 @@ export default {
                          navigator.webkitGetUserMedia ||
                          navigator.mozGetUserMedia;
 
-        var peer = new Peer({key: 'lwjd5qra8257b9',
-                            config: {'iceServers': [
-                                {url: 'numb.viagenie.ca', username: 'rich.matthewJ@gmail.com', password: 'blah'}
-                            ]}});
+        // var peer = new Peer({key: 'lwjd5qra8257b9',
+        //                     config: {'iceServers': [
+        //                         {urls: ['stun1.l.google.com:19302', 'stun2.l.google.com:19302', 'stun3.l.google.com:19302', 'stun4.l.google.com:19302', 'stun.stunprotocol.org:3478']},
+        //                     ]}});
+        var peer = new Peer({
+  config: {key: 'lwjd5qra8257b9', config: {'iceServers': [
+     { url: 'stun3.l.google.com:19302' },
+    { url: 'stun4.l.google.com:19302'}
+    ]}} /* Sample servers, please use appropriate ones */
+});
+
+            //  var peer = new Peer({key: 'lwjd5qra8257b9'});
 
         let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true});
 
