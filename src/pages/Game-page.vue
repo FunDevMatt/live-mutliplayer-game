@@ -22,9 +22,11 @@
                     </div>
                 </div>
             </div>
+            <div id="videoContainer">
                 <video id="myVideo"></video>
                 <video id="matchVideo"></video>
-    
+
+            </div>
 
         </div>
      </main>
@@ -202,6 +204,29 @@ export default {
 
         #sendDiv {
             flex: 1;
+        }
+
+        #videoContainer {
+            width: 100%;
+            height: 300px;
+            position: relative;
+        }
+
+        #myVideo {
+            position: absolute;
+            height: 100px;
+            left: 0;
+            bottom: 0;
+            z-index: 10;
+        }
+
+        #matchVideo {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
         }
 
 
