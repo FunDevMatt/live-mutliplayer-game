@@ -53,7 +53,8 @@ export default {
             message: '',
             messages: [],
             peerConnections: '',
-            showVideos: false
+            showVideos: false,
+            callStarter: false
         }
     },
     computed: mapState(['nspSocket', 'socket', 'usersOnline']),
@@ -72,7 +73,7 @@ export default {
         //                     ]}});
         var peer = new Peer({
   config: {key: 'lwjd5qra8257b9', config: {'iceServers': [
-     { urls: 'stun3.l.google.com:19302' }
+     { urls: ['stun3.l.google.com:19302', 'stun:stun4.l.google.com:19302'] }
     ]}} /* Sample servers, please use appropriate ones */
 });
 
@@ -127,6 +128,7 @@ export default {
         })
 
         this.nspSocket.on("peer-connections", (data) => {
+            this.callStarter = true;
             this.peerConnections = data;
             
             let peerId = this.peerConnections[this.opponent.name];
@@ -134,7 +136,6 @@ export default {
 
             call.on('stream', (matchStream) => {
                 console.log(matchStream)
-
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
 
@@ -142,16 +143,18 @@ export default {
 
         })
 
+       
         peer.on('call', (call) => {
+             if (!this.callStarter) {
                 call.answer(stream);
                 call.on('stream', (matchStream) => {
-                    console.log(matchStream)
-
+                console.log(matchStream)
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
                 this.showVideos = true;
 
-            })
+            })}
+          
         });
 
         this.nspSocket.on("user-left", () => {
