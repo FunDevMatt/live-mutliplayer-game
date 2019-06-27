@@ -59,6 +59,11 @@ export default {
     computed: mapState(['nspSocket', 'socket', 'usersOnline']),
 
     async mounted() {
+
+        navigator.getUserMedia = navigator.getUserMedia ||
+                         navigator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia;
+
         var peer = new Peer({key: 'lwjd5qra8257b9'});
 
         let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true});
