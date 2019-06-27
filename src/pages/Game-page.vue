@@ -53,8 +53,7 @@ export default {
             message: '',
             messages: [],
             peerConnections: '',
-            showVideos: false
-        }
+            showVideos: false        }
     },
     computed: mapState(['nspSocket', 'socket', 'usersOnline']),
 
@@ -161,7 +160,7 @@ export default {
                 matchVideo.play();
                 this.showVideos = true;
 
-
+            })
           
         }, (err) => {
             console.log(err)
