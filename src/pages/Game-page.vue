@@ -23,8 +23,8 @@
                 </div>
             </div>
             <div id="videoContainer">
-                <video id="myVideo"></video>
-                <video id="matchVideo"></video>
+                <video muted autoplay id="myVideo"></video>
+                <video muted autoplay id="matchVideo"></video>
 
             </div>
 
@@ -59,6 +59,8 @@ export default {
     computed: mapState(['nspSocket', 'socket', 'usersOnline']),
 
     async mounted() {
+        let myVideo = document.querySelector("#myVideo");
+        let matchVideo = document.querySelector("#matchVideo");
 
         navigator.getUserMedia = navigator.getUserMedia ||
                          navigator.webkitGetUserMedia ||
@@ -78,8 +80,6 @@ export default {
 
         let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true});
 
-        let myVideo = document.querySelector("#myVideo");
-        let matchVideo = document.querySelector("#matchVideo");
 
         let nspSocketConnection = await io(`${process.env.VUE_APP_SERVER_URL}${this.$props.namespace}`);
         this.$store.commit("updateNspSocket", nspSocketConnection);
@@ -134,10 +134,6 @@ export default {
             call.on('stream', (matchStream) => {
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
-                myVideo.play();
-                matchVideo.play();
-                this.showVideos = true;
-
 
             })
 
@@ -148,8 +144,6 @@ export default {
                 call.on('stream', (matchStream) => {
                 myVideo.srcObject = stream;
                 matchVideo.srcObject = matchStream;
-                myVideo.play();
-                matchVideo.play();
                 this.showVideos = true;
 
             })
