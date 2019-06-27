@@ -129,7 +129,7 @@ export default {
         })
 
         this.nspSocket.on("peer-connections", (data) => {
-            console.log(data)
+            console.log("CONNECTED")
 
             this.callStarter = true;
             this.peerConnections = data;
@@ -161,10 +161,15 @@ export default {
           
         });
 
+        peer.on('error', function(err) {
+            console.log(err)
+        });
+
         this.nspSocket.on("user-left", () => {
             let socketConnection = this.socket;
             socketConnection.disconnect();
             nspSocketConnection.disconnect();
+            peer.disconnect();
 
             this.$store.commit("updateShowUserLeftMatchAlert", true);
             stream.getTracks().forEach(track => track.stop())

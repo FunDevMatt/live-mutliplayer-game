@@ -7,7 +7,6 @@
         :dismissible=true
       > {{ latestOpponent.name}} has left the match</v-alert>
 
-      <Test />
       <p v-if="!showConnectionError">Currently {{ usersOnline }} players online</p>
         <form id="registerSection" v-if="!searching && !playerFound && !showConnectionError"  v-on:submit.prevent>
             <h1>Please enter a username</h1>
