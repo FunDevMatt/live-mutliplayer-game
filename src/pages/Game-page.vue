@@ -5,7 +5,7 @@
             <p v-if="!showVideos">Loading webcams</p>
 
             <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
-            <div v-if="!loadingUsersIn" id="chatBox">
+            <div id="chatBox">
                 <div id="messages">
                     <p v-for="(message, index) in messages" :key="index">
                         <span v-if="message.username === currentPlayer.name">You: </span>
@@ -125,6 +125,7 @@ export default {
                     participant.tracks.forEach(publication => {
                 if (publication.isSubscribed) {
                 const track = publication.track;
+                track
                 document.getElementById('remote-media-div').appendChild(track.attach());
                 }
             });
