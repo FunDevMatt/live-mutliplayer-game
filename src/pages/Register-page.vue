@@ -12,7 +12,8 @@
             <h1>Please enter a username</h1>
             <input type="text" id="name" v-model="name">
             <br>
-            <v-btn @click="searchForGame()" color="danger">Search for game</v-btn>
+            <v-btn @click="searchForGame()" color="danger" :disabled="!webcamAllowed">Search for game</v-btn>
+            <p v-if="!webcamAllowed">Enable your webcam to start!</p>
         </form>
         <div id="searchingLoader" v-if="searching">Searching for a game....</div>
         <div class="spinner" v-if="searching">
@@ -39,11 +40,18 @@ export default {
       playerFound: false,
       latestOpponent: '',
       showConnectionError: false,
-      showUserLeftAlert: false
+      showUserLeftAlert: false,
+      webcamAllowed: false,
+      webcamStream: null
     }
   },
   computed: mapState(['socket', 'nspSocket', 'usersOnline']),
   async mounted() {
+          this.webcamStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+          if (this.webcamStream) {
+            this.webcamAllowed = true;
+          }
+
           this.latestOpponent = this.$store.state.opponent;
           this.showUserLeftAlert = this.$store.state.showUserLeftMatchAlert;
           let socketConnection = await io(process.env.VUE_APP_SERVER_URL, {
@@ -58,6 +66,18 @@ export default {
           this.socket.on("users-online", (users) => {
               this.$store.commit("updateUsersOnline", users);
           })
+  },
+  beforeDestroy() {
+      if (this.webcamStream) {
+         let tracks = this.webcamStream.getTracks();
+          tracks.forEach(function(track) {
+            track.stop();
+          });
+
+
+      }
+
+
   },
   methods: {
     searchForGame() {

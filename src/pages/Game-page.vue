@@ -119,6 +119,15 @@ export default {
             tracks: localTracks
             });
         }).then(room => {
+
+            room.on('disconnected', room => {
+                this.$store.commit("updateShowUserLeftMatchAlert", true);
+
+                this.$router.push({
+                        name: "register"
+                    })
+
+            });
             // get Remote Video for person who created Room
             room.participants.forEach(participant => {
                 if (participant.identity !== this.$props.name) {
