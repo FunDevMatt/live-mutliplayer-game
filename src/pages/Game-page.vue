@@ -95,7 +95,8 @@ export default {
           token,
           {
             name: roomName,
-            tracks: localTracks
+            tracks: localTracks,
+            preferredVideoCodecs: ['VP8', 'H264']
           }
         );
 
