@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div id="videoContainer">
-                <video id="myVideo"></video>
+                <div id="my-video-div"></div>
                 <div id="remote-media-div" style="width: 300px; height: 300px; border: 1px solid black"></div>
 
             </div>
@@ -37,7 +37,7 @@
 import io from 'socket.io-client';
 import { mapState } from 'vuex'
 import axios from "axios";
-const { connect, createLocalTracks } = require('twilio-video');
+const { connect, createLocalTracks, createLocalVideoTrack } = require('twilio-video');
 
 
 
@@ -114,7 +114,6 @@ export default {
             audio: true,
             video: { width: 640 }
         }).then(localTracks => {
-
             return connect(token, {
             name: roomName,
             tracks: localTracks
@@ -132,12 +131,10 @@ export default {
 
             participant.on('trackSubscribed', track => {
                 document.getElementById('remote-media-div').appendChild(track.attach());
-            });
+            });}
 
 
-                }
-            });
-            
+            });            
 
             //   get Remote Video for person who joins room
 
@@ -155,6 +152,10 @@ export default {
                 document.getElementById('remote-media-div').appendChild(track.attach());
             });
             });
+                                    createLocalVideoTrack().then(track => {
+  const localMediaContainer = document.getElementById('my-video-div');
+  localMediaContainer.appendChild(track.attach());
+});
         }).catch(e => console.log(e));
         })
 
