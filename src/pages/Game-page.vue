@@ -43,8 +43,7 @@ export default {
   computed: mapState(["nspSocket", "socket", "usersOnline"]),
 
   async mounted() {
-    let myVideo = document.querySelector("#myVideo");
-    let matchVideo = document.querySelector("#matchVideo");
+  
 
     let nspSocketConnection = await io(
       `${process.env.VUE_APP_SERVER_URL}${this.$props.namespace}`

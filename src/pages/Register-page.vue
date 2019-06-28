@@ -16,7 +16,7 @@
       <h1>Please enter a username</h1>
       <input type="text" id="name" v-model="name">
       <br>
-      <v-btn @click="searchForGame()" color="danger" :disabled="!webcamAllowed">Search for game</v-btn>
+      <v-btn @click="searchForGame()" color="danger">Search for game</v-btn>
       <p v-if="!webcamAllowed">Enable your webcam to start!</p>
     </form>
     <div id="searchingLoader" v-if="searching">Searching for a game....</div>
