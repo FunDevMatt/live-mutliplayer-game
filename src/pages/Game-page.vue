@@ -128,17 +128,10 @@ export default {
                 track
                 document.getElementById('remote-media-div').appendChild(track.attach());
                 }
-            });
-
-            participant.on('trackSubscribed', track => {
-                document.getElementById('remote-media-div').appendChild(track.attach());
             });}
-
-
-            });            
+         });            
 
             //   get Remote Video for person who joins room
-
             room.on('participantConnected', participant => {
                console.log(`Participant "${participant.identity}" connected`);
 
@@ -148,10 +141,7 @@ export default {
                 document.getElementById('remote-media-div').appendChild(track.attach());
                 }
             });
-
-            participant.on('trackSubscribed', track => {
-                document.getElementById('remote-media-div').appendChild(track.attach());
-            });
+            
             });
                                     createLocalVideoTrack().then(track => {
   const localMediaContainer = document.getElementById('my-video-div');
