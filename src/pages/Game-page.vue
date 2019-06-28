@@ -2,11 +2,11 @@
   <main>
     <div id="contentContainer">
       <div class="video-container">
-        <h1 class="videoHeading">You</h1>
+        <h1 class="videoHeading" v-if="showNames">You</h1>
         <div id="my-media-div"></div>
       </div>
       <div class="video-container">
-        <h1 class="videoHeading">{{opponent.name }}</h1>
+        <h1 class="videoHeading" v-if="showNames">{{opponent.name }}</h1>
         <div id="remote-media-div"></div>
       </div>
     </div>
@@ -36,7 +36,8 @@ export default {
       attendees: 0,
       message: "",
       messages: [],
-      showVideos: false
+      loadedUsers: 0,
+      showNames: false
     };
   },
   computed: mapState(["nspSocket", "socket", "usersOnline"]),
@@ -87,7 +88,7 @@ export default {
         let token = data.token;
         let roomName = await data.uniqueName;
         let localTracks = await createLocalTracks({
-          audio: false,
+          audio: true,
           video: { height: 400 }
         });
         // connect to room that
@@ -146,6 +147,8 @@ export default {
         const localMediaContainer = document.getElementById("my-media-div");
         localMediaContainer.appendChild(track.attach());
 
+        this.showNames = true;
+
         // handle room disconnects
         room.on("disconnected", room => {
           this.$store.commit("updateShowUserLeftMatchAlert", true);
@@ -202,6 +205,7 @@ main {
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
+    justify-content: center;
 
     .videoContainer {
       flex: 1;
