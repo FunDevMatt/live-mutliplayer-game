@@ -87,7 +87,7 @@ export default {
             // only one user creates the room
             if (data[0].name === this.$props.name) {
                 try {
-                    let room = await axios.post("http://localhost:3500/create-room");
+                    let room = await axios.post(`${process.env.VUE_APP_SERVER_URL}/create-room`);
                     this.nspSocket.emit("new-room-info", room);
                 } catch (e) {
                     console.log(e)
