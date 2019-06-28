@@ -36,6 +36,9 @@
 <script>
 import io from 'socket.io-client';
 import { mapState } from 'vuex'
+import axios from "axios";
+const { connect, createLocalTracks } = require('twilio-video');
+
 
 
 
@@ -51,9 +54,9 @@ export default {
             currentPlayer: '',
             opponent: '',
             showLeftMatch: false,
+            attendees: 0,
             message: '',
             messages: [],
-            peerConnections: '',
             showVideos: false        }
     },
     computed: mapState(['nspSocket', 'socket', 'usersOnline']),
@@ -63,28 +66,6 @@ export default {
         let matchVideo = document.querySelector("#matchVideo");
 
 
-
-
-        navigator.getUserMedia = navigator.getUserMedia ||
-                         navigator.webkitGetUserMedia ||
-                         navigator.mozGetUserMedia;
-
-        // var peer = new Peer({key: 'lwjd5qra8257b9',
-        //                     config: {'iceServers': [
-        //                         {urls: ['stun1.l.google.com:19302', 'stun2.l.google.com:19302', 'stun3.l.google.com:19302', 'stun4.l.google.com:19302', 'stun.stunprotocol.org:3478']},
-        //                     ]}});
-
-
-
-        var peer = new Peer({key: 'lwjd5qra8257b9',
-                            config: {'iceServers': [
-                                 { 'urls': ['stun:stun1.l.google.com:19302'] } 
-                            ]
-                            }});
-
-            //  var peer = new Peer({key: 'lwjd5qra8257b9'});
-
-        let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true});
 
 
         let nspSocketConnection = await io(`${process.env.VUE_APP_SERVER_URL}${this.$props.namespace}`);
@@ -102,18 +83,17 @@ export default {
 
 
 
-        peer.on('open', id => {
-            console.log(id)
-            this.nspSocket.emit("peer-id", {
-                peerId: id,
-                name: this.$props.name
-            });
-        })
+        this.nspSocket.on("match-info", async (data) => {
+            // only one user creates the room
+            if (data[0].name === this.$props.name) {
+                try {
+                    let room = await axios.post("http://localhost:3500/create-room");
+                    this.nspSocket.emit("new-room-info", room);
+                } catch (e) {
+                    console.log(e)
+                }
+            }
 
-
-
-
-        this.nspSocket.on("match-info", (data) => {
             for (let player in data) {
 
                 if (data[player].name !== this.$props.name) {
@@ -123,9 +103,26 @@ export default {
                     this.currentPlayer = data[player]
                 }
             }
-            this.loadingUsersIn = false;
-    
+        })
 
+        this.nspSocket.on("room-info", async (data) => {
+
+            let token = data.token;
+            let roomName = data.uniqueName;
+            	createLocalTracks({
+            audio: true,
+            video: { width: 640 }
+        }).then(localTracks => {
+            return connect(token, {
+            name: roomName,
+            tracks: localTracks
+            });
+        }).then(room => {
+            console.log("ROOM")
+            room.on('participantConnected', participant => {
+  console.log(`Participant connected: ${participant.identity}`);
+});
+        }).catch(e => console.log(e));
         })
 
 
@@ -133,53 +130,13 @@ export default {
             this.messages.push(message);         
         })
 
-        this.nspSocket.on("peer-connections", (data) => {
-
-            this.peerConnections = data;
-            
-            let peerId = this.peerConnections[this.opponent.name];
-            var call = peer.call(peerId, stream)
-
-            call.on('stream', (matchStream) => {
-                myVideo.srcObject = stream;
-                matchVideo.srcObject = matchStream;
-                myVideo.play();
-                matchVideo.play();
-
-            }, err => {
-                console.log(err)
-            })
-
-        })
-
-       
-        peer.on('call', (call) => {
-                call.answer(stream);
-                call.on('stream', (matchStream) => {
-                myVideo.srcObject = stream;
-                matchVideo.srcObject = matchStream;
-                myVideo.play();
-                matchVideo.play();
-                this.showVideos = true;
-
-            })
-          
-        }, (err) => {
-            console.log(err)
-        });
-
-        peer.on('error', function(err) {
-            console.log(err)
-        });
 
         this.nspSocket.on("user-left", () => {
             let socketConnection = this.socket;
             socketConnection.disconnect();
             nspSocketConnection.disconnect();
-            peer.disconnect();
 
             this.$store.commit("updateShowUserLeftMatchAlert", true);
-            stream.getTracks().forEach(track => track.stop())
 
             this.$router.push({
                     name: "register"
