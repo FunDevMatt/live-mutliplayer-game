@@ -6,7 +6,7 @@
         <div id="my-media-div"></div>
       </div>
       <div class="video-container">
-        <h1 class="videoHeading">Match</h1>
+        <h1 class="videoHeading">{{opponent.name }}</h1>
         <div id="remote-media-div"></div>
       </div>
     </div>
