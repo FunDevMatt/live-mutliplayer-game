@@ -209,6 +209,7 @@ main {
 
     #my-media-div, #remote-media-div {
         width: 100%;
+        padding: 2
     }
 
     video {
