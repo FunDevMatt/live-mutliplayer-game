@@ -111,7 +111,7 @@ export default {
             let token = data.token;
             let roomName = data.uniqueName;
             	createLocalTracks({
-            audio: true,
+            audio: false,
             video: true
         }).then(localTracks => {
             return connect(token, {
