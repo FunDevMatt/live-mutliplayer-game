@@ -105,7 +105,7 @@ export default {
 };
 </script>
 
-<style >
+<style scoped>
 .spinner {
   margin: 100px auto;
   width: 40px;
@@ -169,10 +169,5 @@ export default {
     transform: rotate(-360deg);
     -webkit-transform: rotate(-360deg);
   }
-}
-
-main {
-  height: 100vh;
-  background-color: blueviolet;
 }
 </style>

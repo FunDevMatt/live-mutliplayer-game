@@ -1,15 +1,11 @@
 <template>
   <main>
-    <div id="contentContainer">
-      <div class="video-container">
-        <h1 class="videoHeading" v-if="showNames">You</h1>
-        <div id="my-media-div"></div>
-      </div>
-      <div class="video-container">
-        <h1 class="videoHeading" v-if="showNames">{{opponent.name }}</h1>
-        <div id="remote-media-div"></div>
-      </div>
+    <div id="content-grid">
+      <div id="my-media-div"></div>
+      <div id="remote-media-div"></div>
+      <div id="chatContainer"></div>
     </div>
+   
   </main>
 </template>
 
@@ -43,8 +39,6 @@ export default {
   computed: mapState(["nspSocket", "socket", "usersOnline"]),
 
   async mounted() {
-  
-
     let nspSocketConnection = await io(
       `${process.env.VUE_APP_SERVER_URL}${this.$props.namespace}`
     );
@@ -96,7 +90,7 @@ export default {
           {
             name: roomName,
             tracks: localTracks,
-            preferredVideoCodecs: ['VP8', 'H264']
+            preferredVideoCodecs: ["VP8", "H264"]
           }
         );
 
@@ -142,12 +136,33 @@ export default {
           }
         });
 
-        // Display your video locally for yourself to see
-        let track = await createLocalVideoTrack({height: 400});
-        const localMediaContainer = document.getElementById("my-media-div");
-        localMediaContainer.appendChild(track.attach());
+        room.localParticipant.on(
+          "trackPublicationFailed",
+          (error, localTrack) => {
+            console.warn(
+              'Failed to publish LocalTrack "%s": %s',
+              localTrack.name,
+              error.message
+            );
+          }
+        );
 
-        this.showNames = true;
+        room.on(
+          "trackSubscriptionFailed",
+          (error, remoteTrackPublication, remoteParticipant) => {
+            console.warn(
+              'Failed to subscribe to RemoteTrack "%s" from RemoteParticipant "%s": %s"',
+              remoteTrackPublication.trackName,
+              remoteParticipant.identity,
+              error.message
+            );
+          }
+        );
+
+        // Display your video locally for yourself to see
+        let track = await createLocalVideoTrack({ height: 400 });
+        const localMediaContainer = document.getElementById("my-media-div");
+        localMediaContainer.appendChild(track.attach());      
 
         // handle room disconnects
         room.on("disconnected", room => {
@@ -191,35 +206,55 @@ export default {
 </script>
 
 
-<style lang="scss" scoped>
+<style lang="scss">
 main {
   height: 100vh;
   background-color: rgb(231, 231, 231);
   position: relative;
   width: 100vw;
+  overflow: hidden;
 
-  #contentContainer {
+
+  #content-grid {
+    display: grid;
     width: 80vw;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
+    height: 500px;
+    margin: 75px auto 0 auto;
+    grid-template-areas: "chat1 chat1 chat2 chat2"
+                            "textChat textChat textChat textChat";
+    justify-items: center;
+    grid-column-gap: 20px;
 
-    .videoContainer {
-      flex: 1;
+    #my-media-div {
+      width: 100%;
+      height: 100%;
+      grid-area: chat1;
     }
 
-    #my-media-div, #remote-media-div {
-        width: 100%;
-        padding: 2
+    #remote-media-div {
+      width: 100%;
+      height: 100%;
+      grid-area: chat2;
+    }
+
+
+    #chatContainer {
+      height: 200px;
+      grid-area: textChat;
+      background-color: aqua;
     }
 
     video {
       width: 100%;
-      height: 100%;
+      border-radius: 20px;
+      -webkit-box-shadow: -4px 10px 22px 0px rgba(0,0,0,0.75);
+      -moz-box-shadow: -4px 10px 22px 0px rgba(0,0,0,0.75);
+      box-shadow: -4px 10px 22px 0px rgba(0,0,0,0.75);
     }
+
   }
+
+
 }
+
 </style>
