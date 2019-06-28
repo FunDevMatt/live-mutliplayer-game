@@ -1,32 +1,13 @@
 <template>
   <main>
-    <div class="gameContent">
-      <p v-if="loadingUsersIn">Loading Game...</p>
-      <p v-if="!showVideos">Loading webcams</p>
-
-      <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
-      <div id="content">
-        <div id="chatBox">
-          <div id="messages">
-            <p v-for="(message, index) in messages" :key="index">
-              <span v-if="message.username === currentPlayer.name">You:</span>
-              <span v-if="message.username !== currentPlayer.name">{{ message.username }}:</span>
-              {{ message.text }}
-            </p>
-          </div>
-          <div id="send">
-            <div id="messageDiv">
-              <input v-model="message" type="text" id="messageInput">
-            </div>
-            <div id="sendDiv">
-              <button @click="sendMessage()">OK</button>
-            </div>
-          </div>
-        </div>
-        <div id="videoContainer">
-          <div id="my-video-div" style="width: 300px; height: 300px; border: 1px solid black"></div>
-          <div id="remote-media-div" style="width: 300px; height: 300px; border: 1px solid black"></div>
-        </div>
+    <div id="contentContainer">
+      <div class="video-container">
+        <h1 class="videoHeading">You</h1>
+        <div id="my-media-div"></div>
+      </div>
+      <div class="video-container">
+        <h1 class="videoHeading">Match</h1>
+        <div id="remote-media-div"></div>
       </div>
     </div>
   </main>
@@ -107,7 +88,7 @@ export default {
         let roomName = await data.uniqueName;
         let localTracks = await createLocalTracks({
           audio: false,
-          video: true
+          video: { height: 400 }
         });
         // connect to room that
         let room = await connect(
@@ -161,8 +142,8 @@ export default {
         });
 
         // Display your video locally for yourself to see
-        let track = await createLocalVideoTrack();
-        const localMediaContainer = document.getElementById("my-video-div");
+        let track = await createLocalVideoTrack({height: 400});
+        const localMediaContainer = document.getElementById("my-media-div");
         localMediaContainer.appendChild(track.attach());
 
         // handle room disconnects
@@ -197,6 +178,10 @@ export default {
   methods: {
     sendMessage() {
       this.nspSocket.emit("message-sent", this.message);
+    },
+    checkForBothStreams() {
+      let videos = document.querySelectorAll("video");
+      return video.length === 2;
     }
   }
 };
@@ -206,62 +191,30 @@ export default {
 <style lang="scss" scoped>
 main {
   height: 100vh;
-  background-color: blueviolet;
+  background-color: rgb(231, 231, 231);
   position: relative;
-  .gameContent {
+  width: 100vw;
+
+  #contentContainer {
+    width: 80vw;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -60%);
-  }
-  #chatBox {
-    height: 100%;
-    background-color: white;
-    flex: 1;
-  }
-  #messages {
-    width: 100%;
-    height: 450px;
-  }
-  #send {
-    width: 100%;
-    height: 50px;
-    border: 1px solid black;
+    transform: translate(-50%, -50%);
     display: flex;
-    align-items: center;
-  }
-  #messageDiv {
-    flex: 3;
-  }
-  #sendDiv {
-    flex: 1;
-  }
-  #videoContainer {
-    width: 100%;
-    position: relative;
-  }
-  #myVideo {
-    position: absolute;
-    height: 100px;
-    left: 0;
-    bottom: 0;
-    z-index: 10;
-  }
-  #matchVideo {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    bottom: 0;
-    left: 0;
-    z-index: 1;
-  }
-  #content {
-    display: flex;
-    min-width: 900px;
-  }
-  #videoContainer {
-    flex: 4;
-    height: 100%;
+
+    .videoContainer {
+      flex: 1;
+    }
+
+    #my-media-div, #remote-media-div {
+        width: 100%;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 </style>
