@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div id="videoContainer">
-                <div id="my-video-div"></div>
+                <div id="my-video-div" style="width: 300px; height: 300px; border: 1px solid black"></div>
                 <div id="remote-media-div" style="width: 300px; height: 300px; border: 1px solid black"></div>
 
             </div>
@@ -112,7 +112,7 @@ export default {
             let roomName = data.uniqueName;
             	createLocalTracks({
             audio: true,
-            video: { width: 640 }
+            video: true
         }).then(localTracks => {
             return connect(token, {
             name: roomName,
