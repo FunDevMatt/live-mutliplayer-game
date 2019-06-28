@@ -5,7 +5,8 @@
             <p v-if="!showVideos">Loading webcams</p>
 
             <p v-if="!loadingUsersIn" style="color: white">{{ name}} VS {{ opponent.name }}</p>
-            <div id="chatBox">
+            <div id="content">
+                 <div id="chatBox">
                 <div id="messages">
                     <p v-for="(message, index) in messages" :key="index">
                         <span v-if="message.username === currentPlayer.name">You: </span>
@@ -21,12 +22,14 @@
                         <button @click="sendMessage()">OK</button>
                     </div>
                 </div>
-            </div>
-            <div id="videoContainer">
-                <div id="my-video-div" style="width: 300px; height: 300px; border: 1px solid black"></div>
-                <div id="remote-media-div" style="width: 300px; height: 300px; border: 1px solid black"></div>
+                </div>
+                <div id="videoContainer">
+                    <div id="my-video-div" style="width: 300px; height: 300px; border: 1px solid black"></div>
+                    <div id="remote-media-div" style="width: 300px; height: 300px; border: 1px solid black"></div>
+                </div>
 
             </div>
+           
 
         </div>
      </main>
@@ -215,9 +218,9 @@ export default {
         }
 
         #chatBox {
-            width: 400px;
-            height: 500px;
+            height: 100%;
             background-color: white;
+            flex: 1
         }
 
         #messages {
@@ -243,7 +246,6 @@ export default {
 
         #videoContainer {
             width: 100%;
-            height: 300px;
             position: relative;
         }
 
@@ -262,6 +264,16 @@ export default {
             bottom: 0;
             left: 0;
             z-index: 1;
+        }
+
+        #content {
+            display: flex;
+            min-width: 900px;
+        }
+
+        #videoContainer {
+            flex: 4;
+            height: 100%;
         }
 
 
