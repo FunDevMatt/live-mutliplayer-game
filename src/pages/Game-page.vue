@@ -24,7 +24,7 @@
             </div>
             <div id="videoContainer">
                 <video id="myVideo"></video>
-                <video id="matchVideo"></video>
+                <div id="remote-media-div" style="width: 300px; height: 300px; border: 1px solid black"></div>
 
             </div>
 
@@ -106,6 +106,7 @@ export default {
         })
 
         this.nspSocket.on("room-info", async (data) => {
+            console.log(data)
 
             let token = data.token;
             let roomName = data.uniqueName;
@@ -113,15 +114,47 @@ export default {
             audio: true,
             video: { width: 640 }
         }).then(localTracks => {
+
             return connect(token, {
             name: roomName,
             tracks: localTracks
             });
         }).then(room => {
-            console.log("ROOM")
+            // get Remote Video for person who created Room
+            room.participants.forEach(participant => {
+                if (participant.identity !== this.$props.name) {
+                    participant.tracks.forEach(publication => {
+                if (publication.isSubscribed) {
+                const track = publication.track;
+                document.getElementById('remote-media-div').appendChild(track.attach());
+                }
+            });
+
+            participant.on('trackSubscribed', track => {
+                document.getElementById('remote-media-div').appendChild(track.attach());
+            });
+
+
+                }
+            });
+            
+
+            //   get Remote Video for person who joins room
+
             room.on('participantConnected', participant => {
-  console.log(`Participant connected: ${participant.identity}`);
-});
+               console.log(`Participant "${participant.identity}" connected`);
+
+            participant.tracks.forEach(publication => {
+                if (publication.isSubscribed) {
+                const track = publication.track;
+                document.getElementById('remote-media-div').appendChild(track.attach());
+                }
+            });
+
+            participant.on('trackSubscribed', track => {
+                document.getElementById('remote-media-div').appendChild(track.attach());
+            });
+            });
         }).catch(e => console.log(e));
         })
 
