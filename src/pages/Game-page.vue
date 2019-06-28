@@ -106,9 +106,10 @@ export default {
         let token = data.token;
         let roomName = await data.uniqueName;
         let localTracks = await createLocalTracks({
-          audio: true,
+          audio: false,
           video: true
         });
+        // connect to room that
         let room = await connect(
           token,
           {
@@ -117,14 +118,29 @@ export default {
           }
         );
 
-        room.on("disconnected", room => {
-          this.$store.commit("updateShowUserLeftMatchAlert", true);
+        // The creator of the room will be alerted when the matched dev has joined
+        room.on("participantConnected", participant => {
+          console.log(`Participant "${participant.identity}" connected`);
 
-          this.$router.push({
-            name: "register"
+          // checks the tracks the participant already has
+          participant.tracks.forEach(publication => {
+            if (publication.isSubscribed) {
+              const track = publication.track;
+              document
+                .getElementById("remote-media-div")
+                .appendChild(track.attach());
+            }
+          });
+
+          // handle any new tracks the particpant adds
+          participant.on("trackSubscribed", track => {
+            document
+              .getElementById("remote-media-div")
+              .appendChild(track.attach());
           });
         });
-        // get Remote Video for person who created Room
+
+        // for the user that joins, he needs to grab the tracks for the  user that is already in the room
         room.participants.forEach(participant => {
           if (participant.identity !== this.$props.name) {
             participant.tracks.forEach(publication => {
@@ -136,7 +152,6 @@ export default {
                   .appendChild(track.attach());
               }
             });
-
             participant.on("trackSubscribed", track => {
               document
                 .getElementById("remote-media-div")
@@ -145,30 +160,19 @@ export default {
           }
         });
 
-        //   get Remote Video for person who joins room
-
-        room.on("participantConnected", participant => {
-          console.log(`Participant "${participant.identity}" connected`);
-
-          participant.tracks.forEach(publication => {
-            if (publication.isSubscribed) {
-              const track = publication.track;
-              document
-                .getElementById("remote-media-div")
-                .appendChild(track.attach());
-            }
-          });
-
-          participant.on("trackSubscribed", track => {
-            document
-              .getElementById("remote-media-div")
-              .appendChild(track.attach());
-          });
-        });
-
+        // Display your video locally for yourself to see
         let track = await createLocalVideoTrack();
         const localMediaContainer = document.getElementById("my-video-div");
         localMediaContainer.appendChild(track.attach());
+
+        // handle room disconnects
+        room.on("disconnected", room => {
+          this.$store.commit("updateShowUserLeftMatchAlert", true);
+
+          this.$router.push({
+            name: "register"
+          });
+        });
       } catch (e) {
         console.log(e);
       }
