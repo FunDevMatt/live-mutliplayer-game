@@ -228,7 +228,7 @@ export default {
 
 <style lang="scss">
 main {
-  height: 100vh;
+  min-height: 100vh;
   background-color: rgb(231, 231, 231);
   position: relative;
   width: 100vw;
