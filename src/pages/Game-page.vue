@@ -30,6 +30,7 @@
 import io from "socket.io-client";
 import { mapState } from "vuex";
 import axios from "axios";
+import { setTimeout } from 'timers';
 const {
   connect,
   createLocalTracks,
@@ -50,12 +51,16 @@ export default {
       messages: [],
       loadedUsers: 0,
       showNames: false,
-      showMessages: false
+      showMessages: false,
+      opponentTracks: [],
+      localTrack: []
     };
   },
   computed: mapState(["nspSocket", "socket", "usersOnline"]),
 
   async mounted() {
+
+
     let nspSocketConnection = await io(
       `${process.env.VUE_APP_SERVER_URL}${this.$props.namespace}`
     );
@@ -119,17 +124,16 @@ export default {
           participant.tracks.forEach(publication => {
             if (publication.isSubscribed) {
               const track = publication.track;
-              document
-                .getElementById("remote-media-div")
-                .appendChild(track.attach());
+              console.log(1)
+              this.opponentTracks.push(track);
             }
           });
 
           // handle any new tracks the particpant adds
           participant.on("trackSubscribed", track => {
-            document
-              .getElementById("remote-media-div")
-              .appendChild(track.attach());
+                            console.log(2)
+
+            this.opponentTracks.push(track);
           });
         });
 
@@ -139,16 +143,11 @@ export default {
             participant.tracks.forEach(publication => {
               if (publication.isSubscribed) {
                 const track = publication.track;
-                track;
-                document
-                  .getElementById("remote-media-div")
-                  .appendChild(track.attach());
+                this.opponentTracks.push(track);
               }
             });
             participant.on("trackSubscribed", track => {
-              document
-                .getElementById("remote-media-div")
-                .appendChild(track.attach());
+              this.opponentTracks.push(track);
             });
           }
         });
@@ -178,10 +177,9 @@ export default {
 
         // Display your video locally for yourself to see
         let track = await createLocalVideoTrack({ height: 400 });
-        const localMediaContainer = document.getElementById("my-media-div");
-        localMediaContainer.appendChild(track.attach());
+        this.localTrack = track;
+        console.log(this.localTrack)
 
-        this.showMessages = true;
 
         // handle room disconnects
         room.on("disconnected", room => {
@@ -216,17 +214,46 @@ export default {
   methods: {
     sendMessage() {
       this.nspSocket.emit("message-sent", this.message);
-    },
-    checkForBothStreams() {
-      let videos = document.querySelectorAll("video");
-      return video.length === 2;
     }
+  },
+  watch: {
+          opponentTracks(val)  {
+              if (val.length === 2 && this.localTrack) {
+                const localMediaContainer = document.getElementById("my-media-div");
+                localMediaContainer.appendChild(this.localTrack.attach());
+
+                const matchMediaContainer = document.getElementById("remote-media-div");
+                val.forEach(track => {
+                    matchMediaContainer.appendChild(track.attach());
+                })
+                let contentGrid = document.querySelector("#content-grid");
+                setTimeout(() => {
+                    contentGrid.classList.add("opacity-important")
+
+
+                }, 500)
+
+
+                 
+              }
+          }
+    
   }
 };
 </script>
 
 
 <style lang="scss">
+@keyframes fadeUp {
+    100% {opacity: 1; transform: translateY(0)}
+    
+}
+.opacity-important {
+    animation-name: fadeUp;
+    animation-fill-mode: forwards;
+    animation-duration: 1s;
+    animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
+}
 main {
   position: relative;
   width: 100vw;
@@ -242,6 +269,8 @@ main {
     justify-items: center;
     grid-column-gap: 20px;
     grid-row-gap: 20px;
+    opacity: 0;
+    transform: translateY(50%);
 
     #my-media-div {
       width: 100%;
