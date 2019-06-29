@@ -1,6 +1,5 @@
 <template>
   <main>
-    <video id="testVideo"></video>
     <div id="content-grid">
       <div id="my-media-div"></div>
       <div id="remote-media-div"></div>
@@ -222,21 +221,17 @@ export default {
               console.log("opponent tracks", val);
               if (val.length === 2 && this.localTrack) {
                 const localMediaContainer = document.getElementById("my-media-div");
-                const matchMediaContainer = document.getElementById("remote-media-div");
-                
-                val.forEach(track => {
-                    if (track.kind === "video") {
-                        if (track.isStarted) {
-                            localMediaContainer.appendChild(this.localTrack.attach());
-                            matchMediaContainer.appendChild(track.attach());
+                localMediaContainer.appendChild(this.localTrack.attach());
 
-                        }
-                    }
+                const matchMediaContainer = document.getElementById("remote-media-div");
+                val.forEach(track => {
                     console.log("track appending", track)
+                    matchMediaContainer.appendChild(track.attach());
                 })
                 let contentGrid = document.querySelector("#content-grid");
                 setTimeout(() => {
                     contentGrid.classList.add("opacity-important")
+                    this.showMessages = true;
                 }, 500)
 
 
@@ -294,16 +289,15 @@ main {
       height: 300px;
       width: 100%;
       grid-area: textChat;
-      background-color: #9dc1fc;
+      background-color: #dedede;
       border-radius: 20px;
       position: relative;
       display: flex;
       flex-direction: column;
-
       #messageArea {
         flex: 4;
         width: 100%;
-        background-color: #9dc1fc;
+        background-color: #dedede;
         border-radius: 20px;
         padding: 5px 10px;
         overflow: scroll;
@@ -312,7 +306,7 @@ main {
       #sendArea {
         flex: 1;
         width: 100%;
-        background-color: #9dc1fc;
+        background-color: #dedede;
         border-radius: 20px;
         padding: 5px 10px;
         display: flex;
