@@ -226,7 +226,9 @@ export default {
 
                 const matchMediaContainer = document.getElementById("remote-media-div");
                 val.forEach(track => {
-                    track.dimensions.height = 400
+                    if (track.dimensions) {
+                        track.dimensions.height = 400
+                    }
                     matchMediaContainer.appendChild(track.attach());
                 })
                 let contentGrid = document.querySelector("#content-grid");
