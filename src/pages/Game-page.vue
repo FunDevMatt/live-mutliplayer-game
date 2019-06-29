@@ -218,6 +218,7 @@ export default {
   },
   watch: {
           opponentTracks(val)  {
+              console.log(val)
               if (val.length === 2 && this.localTrack) {
                 const localMediaContainer = document.getElementById("my-media-div");
                 localMediaContainer.appendChild(this.localTrack.attach());
@@ -229,8 +230,6 @@ export default {
                 let contentGrid = document.querySelector("#content-grid");
                 setTimeout(() => {
                     contentGrid.classList.add("opacity-important")
-
-
                 }, 500)
 
 
