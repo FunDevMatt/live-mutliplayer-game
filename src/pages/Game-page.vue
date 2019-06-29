@@ -1,28 +1,28 @@
 <template>
-  <main>
-    <div id="content-grid">
-      <div id="my-media-div"></div>
-      <div id="remote-media-div"></div>
-      <div id="chatContainer" v-if="showMessages">
-        <div id="messageArea">
-          <p v-for="(message, index) in messages" :key="index">
-            <span v-if="message.username === currentPlayer.name">You: </span>
-            <span v-if="message.username !== currentPlayer.name">{{message.username}}: </span>
-
-            {{ message.text }}
-            </p>
+    <div>
+        <div id="loading" v-if="!showMessages">Loading</div>
+        <div id="content-grid">
+        <div id="my-media-div"></div>
+        <div id="remote-media-div"></div>
+        <div id="chatContainer" v-if="showMessages">
+            <div id="messageArea">
+            <p v-for="(message, index) in messages" :key="index">
+                <span v-if="message.username === currentPlayer.name">You: </span>
+                <span v-if="message.username !== currentPlayer.name">{{message.username}}: </span>
+                {{ message.text }}
+                </p>
+            </div>
+            <div id="sendArea">
+            <div id="textField">
+                <v-text-field label="Solo" solo v-model="message"></v-text-field>
+            </div>
+            <div id="sendBtn">
+                <v-btn @click="sendMessage()" color="danger">Send</v-btn>
+            </div>
+            </div>
         </div>
-        <div id="sendArea">
-          <div id="textField">
-            <v-text-field label="Solo" solo v-model="message"></v-text-field>
-          </div>
-          <div id="sendBtn">
-            <v-btn @click="sendMessage()" color="danger">Send</v-btn>
-          </div>
         </div>
-      </div>
-    </div>
-  </main>
+     </div>
 </template>
 
 
@@ -255,9 +255,6 @@ export default {
     animation-duration: 1s;
     animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
 }
-main {
-  position: relative;
-  width: 100vw;
 
   #content-grid {
     display: grid;
@@ -329,5 +326,11 @@ main {
       box-shadow: -4px 10px 22px 0px rgba(0, 0, 0, 0.75);
     }
   }
-}
+  #loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%)
+
+  }
 </style>
