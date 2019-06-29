@@ -219,7 +219,7 @@ export default {
   },
   watch: {
           opponentTracks(val)  {
-              console.log("opponent tracks: " + val);
+              console.log("opponent tracks", val);
               if (val.length === 2 && this.localTrack) {
                 const localMediaContainer = document.getElementById("my-media-div");
                 localMediaContainer.appendChild(this.localTrack.attach());
