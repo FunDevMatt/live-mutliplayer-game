@@ -222,15 +222,17 @@ export default {
               console.log("opponent tracks", val);
               if (val.length === 2 && this.localTrack) {
                 const localMediaContainer = document.getElementById("my-media-div");
-                localMediaContainer.appendChild(this.localTrack.attach());
-
                 const matchMediaContainer = document.getElementById("remote-media-div");
+                
                 val.forEach(track => {
-                    if (track.dimensions) {
-                        track.dimensions.height = 400
+                    if (track.kind === "video") {
+                        if (track.isStarted) {
+                            localMediaContainer.appendChild(this.localTrack.attach());
+                            matchMediaContainer.appendChild(track.attach());
+
+                        }
                     }
                     console.log("track appending", track)
-                    matchMediaContainer.appendChild(track.attach());
                 })
                 let contentGrid = document.querySelector("#content-grid");
                 setTimeout(() => {
