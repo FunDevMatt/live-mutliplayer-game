@@ -1,5 +1,6 @@
 <template>
   <main>
+    <video id="testVideo"></video>
     <div id="content-grid">
       <div id="my-media-div"></div>
       <div id="remote-media-div"></div>
@@ -218,13 +219,17 @@ export default {
   },
   watch: {
           opponentTracks(val)  {
-              console.log(val)
+              console.log("opponent tracks: " + val);
               if (val.length === 2 && this.localTrack) {
                 const localMediaContainer = document.getElementById("my-media-div");
                 localMediaContainer.appendChild(this.localTrack.attach());
 
                 const matchMediaContainer = document.getElementById("remote-media-div");
                 val.forEach(track => {
+                    if (track.kind === "video") {
+                        let video = document.querySelector("#testVideo");
+                        video.srcObject = track.mediaStreamTrack;
+                    }
                     matchMediaContainer.appendChild(track.attach());
                 })
                 let contentGrid = document.querySelector("#content-grid");
