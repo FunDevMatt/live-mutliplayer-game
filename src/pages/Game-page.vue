@@ -104,7 +104,7 @@ export default {
         let roomName = await data.uniqueName;
         let localTracks = await createLocalTracks({
           audio: true,
-          video: { width: 320 }
+          video: true
         });
         // connect to room that
         let room = await connect(
@@ -176,7 +176,7 @@ export default {
         );
 
         // Display your video locally for yourself to see
-        let track = await createLocalVideoTrack({ height: 400 });
+        let track = await createLocalVideoTrack({ width: 320 });
         this.localTrack = track;
         console.log(this.localTrack)
 
