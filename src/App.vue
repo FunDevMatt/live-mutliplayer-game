@@ -26,4 +26,7 @@ export default {
   color: #2c3e50;
   box-sizing: border-box;
 }
+body {
+  background-color: rgb(231, 231, 231)
+}
 </style>

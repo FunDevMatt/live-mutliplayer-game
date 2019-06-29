@@ -228,11 +228,8 @@ export default {
 
 <style lang="scss">
 main {
-  min-height: 100vh;
-  background-color: rgb(231, 231, 231);
   position: relative;
   width: 100vw;
-  overflow: hidden;
 
   #content-grid {
     display: grid;
