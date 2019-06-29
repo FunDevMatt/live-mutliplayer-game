@@ -3,9 +3,25 @@
     <div id="content-grid">
       <div id="my-media-div"></div>
       <div id="remote-media-div"></div>
-      <div id="chatContainer"></div>
+      <div id="chatContainer" v-if="showMessages">
+        <div id="messageArea">
+          <p v-for="(message, index) in messages" :key="index">
+            <span v-if="message.username === currentPlayer.name">You: </span>
+            <span v-if="message.username !== currentPlayer.name">{{message.username}}: </span>
+
+            {{ message.text }}
+            </p>
+        </div>
+        <div id="sendArea">
+          <div id="textField">
+            <v-text-field label="Solo" solo v-model="message"></v-text-field>
+          </div>
+          <div id="sendBtn">
+            <v-btn @click="sendMessage()" color="danger">Send</v-btn>
+          </div>
+        </div>
+      </div>
     </div>
-   
   </main>
 </template>
 
@@ -33,7 +49,8 @@ export default {
       message: "",
       messages: [],
       loadedUsers: 0,
-      showNames: false
+      showNames: false,
+      showMessages: false
     };
   },
   computed: mapState(["nspSocket", "socket", "usersOnline"]),
@@ -162,7 +179,9 @@ export default {
         // Display your video locally for yourself to see
         let track = await createLocalVideoTrack({ height: 400 });
         const localMediaContainer = document.getElementById("my-media-div");
-        localMediaContainer.appendChild(track.attach());      
+        localMediaContainer.appendChild(track.attach());
+
+        this.showMessages = true;
 
         // handle room disconnects
         room.on("disconnected", room => {
@@ -178,6 +197,7 @@ export default {
     });
 
     this.nspSocket.on("message-received", message => {
+      console.log(message)
       this.messages.push(message);
     });
 
@@ -214,16 +234,17 @@ main {
   width: 100vw;
   overflow: hidden;
 
-
   #content-grid {
     display: grid;
     width: 80vw;
     height: 500px;
     margin: 75px auto 0 auto;
-    grid-template-areas: "chat1 chat1 chat2 chat2"
-                            "textChat textChat textChat textChat";
+    grid-template-areas:
+      "chat1 chat1 chat2 chat2"
+      "textChat textChat textChat textChat";
     justify-items: center;
     grid-column-gap: 20px;
+    grid-row-gap: 20px;
 
     #my-media-div {
       width: 100%;
@@ -237,24 +258,50 @@ main {
       grid-area: chat2;
     }
 
-
     #chatContainer {
-      height: 200px;
+      height: 300px;
+      width: 100%;
       grid-area: textChat;
-      background-color: aqua;
+      background-color: #9dc1fc;
+      border-radius: 20px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+
+      #messageArea {
+        flex: 4;
+        width: 100%;
+        background-color: #9dc1fc;
+        border-radius: 20px;
+        padding: 5px 10px;
+        overflow: scroll;
+      }
+
+      #sendArea {
+        flex: 1;
+        width: 100%;
+        background-color: #9dc1fc;
+        border-radius: 20px;
+        padding: 5px 10px;
+        display: flex;
+
+        #textField {
+          flex: 4;
+        }
+
+        #sendBtn {
+          flex: 1;
+        }
+      }
     }
 
     video {
       width: 100%;
       border-radius: 20px;
-      -webkit-box-shadow: -4px 10px 22px 0px rgba(0,0,0,0.75);
-      -moz-box-shadow: -4px 10px 22px 0px rgba(0,0,0,0.75);
-      box-shadow: -4px 10px 22px 0px rgba(0,0,0,0.75);
+      -webkit-box-shadow: -4px 10px 22px 0px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: -4px 10px 22px 0px rgba(0, 0, 0, 0.75);
+      box-shadow: -4px 10px 22px 0px rgba(0, 0, 0, 0.75);
     }
-
   }
-
-
 }
-
 </style>
