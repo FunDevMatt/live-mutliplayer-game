@@ -229,6 +229,7 @@ export default {
                     if (track.dimensions) {
                         track.dimensions.height = 400
                     }
+                    console.log("track appending", track)
                     matchMediaContainer.appendChild(track.attach());
                 })
                 let contentGrid = document.querySelector("#content-grid");
