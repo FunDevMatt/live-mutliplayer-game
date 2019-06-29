@@ -226,10 +226,7 @@ export default {
 
                 const matchMediaContainer = document.getElementById("remote-media-div");
                 val.forEach(track => {
-                    if (track.kind === "video") {
-                        let video = document.querySelector("#testVideo");
-                        video.srcObject = track.mediaStreamTrack;
-                    }
+                    track.dimensions.height = 400
                     matchMediaContainer.appendChild(track.attach());
                 })
                 let contentGrid = document.querySelector("#content-grid");
