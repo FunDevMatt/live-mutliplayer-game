@@ -1,5 +1,28 @@
 <template>
-  <main>
+  <div class="content">
+      <div id="weclomeSection">
+        <h1 id="mainMessage">Share your story.</h1>
+        <p class="subHeading" id="knowlegdeSub">
+          Your knowlegde is valuable. Meet with like-minded individuals and discuss anything development related.
+        </p>
+        <div id="computerIllustration"></div>
+      </div>
+      <div id="searchSection">
+          <div id="searchContent">
+            <p class="subHeading t-center">Just enter in a nickname.</p>
+            <v-text-field
+            label="Nickname"
+          ></v-text-field>
+           <p class="subHeading t-center">And</p>
+            <v-btn color="#FF6584" style="color: white; left: 50%; transform: translateX(-55%)">Meet A Dev!</v-btn>
+            <p class="t-center" id="devCount">There is currently {{ usersOnline }} 
+              <span v-if="usersOnline === 1">dev</span> 
+              <span v-if="usersOnline !== 1">devs</span>
+              online.</p>
+          </div>
+      </div>
+  </div>
+  <!-- <main>
     <v-alert
       :value="showUserLeftAlert"
       type="warning"
@@ -29,7 +52,7 @@
       v-if="showConnectionError"
       style="color: red"
     >We ran into a problem connecting you with the servers</div>
-  </main>
+  </main> -->
 </template>
 
 <script>
@@ -105,69 +128,80 @@ export default {
 };
 </script>
 
-<style scoped>
-.spinner {
-  margin: 100px auto;
-  width: 40px;
-  height: 40px;
-  position: relative;
+<style lang="scss" scoped>
+.t-center {
+  text-align: center;
 }
+  .content {
+    text-align: left;
+    min-height: 100vh;
+    background-color: #3EADFF;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    
 
-.cube1,
-.cube2 {
-  background-color: white;
-  width: 15px;
-  height: 15px;
-  position: absolute;
-  top: 0;
-  left: 0;
 
-  -webkit-animation: sk-cubemove 1.8s infinite ease-in-out;
-  animation: sk-cubemove 1.8s infinite ease-in-out;
-}
+    & > div {
+      padding: 0 4rem;
+    }
 
-.cube2 {
-  -webkit-animation-delay: -0.9s;
-  animation-delay: -0.9s;
-}
+    #mainMessage {
+      margin-top: 11rem;
+      font-size: 5rem;
+      line-height: 5.5rem;
+    }
 
-@-webkit-keyframes sk-cubemove {
-  25% {
-    -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
-  }
-  50% {
-    -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
-  }
-  75% {
-    -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg)
-      scale(0.5);
-  }
-  100% {
-    -webkit-transform: rotate(-360deg);
-  }
-}
+    .subHeading {
+      font-size: 1.6rem;
+      line-height: 3rem;
+    }
 
-@keyframes sk-cubemove {
-  25% {
-    transform: translateX(42px) rotate(-90deg) scale(0.5);
-    -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+    #knowlegdeSub {
+      margin-top: 2rem;
+    }
+
+    #computerIllustration {
+      width: 100%;
+      height: 21rem;
+      background-image: url("../assets/img/computer-illustation.png");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      margin-top: -4.5rem;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 40rem;
+      min-width: 31rem;
+    }
+
+    #searchSection {
+      position: relative;
+
+      #searchContent {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+    #devCount {
+      margin-top: 2rem;
+    }
   }
-  50% {
-    transform: translateX(42px) translateY(42px) rotate(-179deg);
-    -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+  
+
+  @media screen and (max-width: 750px) {
+    .content {
+      grid-template-columns: 1fr;
+    }
+    #searchContent {
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: translate(0, 0);
+      }
+    
   }
-  50.1% {
-    transform: translateX(42px) translateY(42px) rotate(-180deg);
-    -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
-  }
-  75% {
-    transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
-    -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg)
-      scale(0.5);
-  }
-  100% {
-    transform: rotate(-360deg);
-    -webkit-transform: rotate(-360deg);
-  }
-}
+  
+
+
 </style>

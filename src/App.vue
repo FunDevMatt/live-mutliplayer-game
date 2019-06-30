@@ -15,18 +15,17 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
 * {
-  text-align: center;
   padding: 0;
   margin: 0;
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
   box-sizing: border-box;
+  color: #FFFFFF;
 }
 body {
-  background-color: rgb(231, 231, 231)
+  background-color: #3EADFF;
 }
 </style>
