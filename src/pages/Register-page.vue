@@ -23,6 +23,7 @@
             <v-text-field
             label="Nickname"
             v-model="name"
+            style="max-width: 17rem; margin: 0 auto"
           ></v-text-field>
            <p class="subHeading t-center">And</p>
             <v-btn :loading="searching" @click="searchForGame()" color="#FF6584" style="color: white; left: 50%; transform: translateX(-55%)">Meet A Dev!</v-btn>
@@ -191,12 +192,10 @@ export default {
     #computerIllustration {
       width: 100%;
       height: 21rem;
-      background-image: url("../assets/img/computer-illustation.png");
+      background-image: url("../assets/img/cropped-desk.png");
       background-size: 100% 100%;
       background-repeat: no-repeat;
-      margin-top: -4.5rem;
-      margin-left: auto;
-      margin-right: auto;
+      margin-top: .5rem;
       max-width: 40rem;
       min-width: 21rem;
     }
@@ -234,6 +233,11 @@ export default {
       #mainMessage {
         margin-top: 2rem !important;
       }
+
+    #computerIllustration {
+      margin-left: auto;
+      margin-right: auto;
+    }
 
   
     
