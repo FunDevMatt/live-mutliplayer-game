@@ -3,9 +3,8 @@
         <div v-if="loadingUsersVideo">
             <p>Connecting you to a dev!</p>
         </div>
-        <div id="videos">
+        <div id="remote-media-div">
             <div id="my-media-div"></div>
-            <div id="remote-media-div"></div>
         </div>
 
     </div>
@@ -254,7 +253,30 @@ export default {
 
 <style lang="scss">
     .content {
-        background-color: #3EADFF;
+        background-color: #E3E3E3;
         min-height: 100vh;
+        overflow: hidden;
+
+        #remote-media-div {
+            width: 41rem;
+            margin: 6rem auto 0 auto;
+            position: relative;
+
+            #my-media-div {
+                position: absolute;
+                width: 10rem;
+                bottom: 1rem;
+                left: 1rem;
+                z-index: 20;
+            }
+
+
+            video {
+                width: 100%;
+                top: 0;
+                left: 0;
+                border: .3rem solid #3EADFF;
+            }
+        }
     }
 </style>
