@@ -94,14 +94,7 @@ export default {
     };
   },
   computed: mapState(["socket", "nspSocket", "usersOnline"]),
-  async mounted() {
-    navigator.getUserMedia = navigator.getUserMedia ||
-                         navigator.webkitGetUserMedia ||
-                         navigator.mozGetUserMedia;
-
-    if (!navigator.getUserMedia) {
-      alert("Navigator not supported in this browser")
-    }                     
+  async mounted() {         
 
     this.webcamStream = await navigator.mediaDevices.getUserMedia({
       video: true,

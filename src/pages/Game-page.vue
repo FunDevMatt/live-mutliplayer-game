@@ -247,7 +247,13 @@ export default {
                 const matchMediaContainer = document.getElementById("remote-media-div");
                 val.forEach(track => {
                     console.log("track appending", track)
-                    matchMediaContainer.appendChild(track.attach());
+                    if (track.kind === "video") {
+                          track.setAttribute('autoplay', '');
+                          track.setAttribute('muted', '');
+                          track.setAttribute('playsinline', '');
+                    }
+                     matchMediaContainer.appendChild(track.attach());
+
                 })
                 let contentGrid = document.querySelector("#content-grid");
                 setTimeout(() => {
