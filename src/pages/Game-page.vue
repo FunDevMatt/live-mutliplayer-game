@@ -240,10 +240,6 @@ export default {
                 const matchMediaContainer = document.getElementById("remote-media-div");
                 val.forEach(track => {
                     console.log("track appending", track)
-                    if (track.kind === "video") {
-                          track.setAttribute('autoplay', true);
-                          track.setAttribute('playsinline', true);
-                    }
                      matchMediaContainer.appendChild(track.attach());
 
                 })
