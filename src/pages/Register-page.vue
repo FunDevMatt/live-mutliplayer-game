@@ -26,6 +26,10 @@
           ></v-text-field>
            <p class="subHeading t-center">And</p>
             <v-btn :loading="searching" @click="searchForGame()" color="#FF6584" style="color: white; left: 50%; transform: translateX(-55%)">Meet A Dev!</v-btn>
+            <transition name="fade">
+                          <p class="t-center" v-if="searching">Searching for a dev!</p>
+
+            </transition>
             <p class="t-center" id="devCount">There is currently {{ usersOnline }} 
               <span v-if="usersOnline === 1">dev</span> 
               <span v-if="usersOnline !== 1">devs</span>
@@ -155,6 +159,7 @@ export default {
 .t-center {
   text-align: center;
 }
+
   .content {
     text-align: left;
     min-height: 100vh;
@@ -169,7 +174,7 @@ export default {
     }
 
     #mainMessage {
-      margin-top: 11rem;
+      margin-top: 5.5rem;
       font-size: 5rem;
       line-height: 5.5rem;
     }
@@ -193,7 +198,7 @@ export default {
       margin-left: auto;
       margin-right: auto;
       max-width: 40rem;
-      min-width: 31rem;
+      min-width: 21rem;
     }
 
     #searchSection {
@@ -215,6 +220,9 @@ export default {
   @media screen and (max-width: 850px) {
     .content {
       grid-template-columns: 1fr;
+        & > div {
+      padding: 0 1rem;
+    }
     }
     #searchContent {
         position: relative !important;
@@ -226,6 +234,8 @@ export default {
       #mainMessage {
         margin-top: 2rem !important;
       }
+
+  
     
   }
   
