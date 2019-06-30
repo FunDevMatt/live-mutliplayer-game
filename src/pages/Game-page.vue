@@ -68,6 +68,14 @@ export default {
 
   async mounted() {
 
+    navigator.getUserMedia = navigator.getUserMedia ||
+                         navigator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia;
+
+    if (!navigator.getUserMedia) {
+      alert("Navigator not supported in this browser")
+    }  
+
 
     let nspSocketConnection = await io(
       `${process.env.VUE_APP_SERVER_URL}${this.$props.namespace}`
@@ -137,6 +145,7 @@ export default {
           });
 
           participant.on('trackAdded', (track) => {
+            console.log("TRACK ADDED")
             this.opponentTracks.push(track)
           });
 
@@ -188,6 +197,7 @@ export default {
 
         // Display your video locally for yourself to see
         let track = await createLocalVideoTrack({ width: 320 });
+        console.log("da", track)
         this.localTrack = track;
         console.log(this.localTrack)
 
