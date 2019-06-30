@@ -68,13 +68,6 @@ export default {
 
   async mounted() {
 
-    navigator.getUserMedia = navigator.getUserMedia ||
-                         navigator.webkitGetUserMedia ||
-                         navigator.mozGetUserMedia;
-
-    if (!navigator.getUserMedia) {
-      alert("Navigator not supported in this browser")
-    }  
 
 
     let nspSocketConnection = await io(
@@ -248,9 +241,8 @@ export default {
                 val.forEach(track => {
                     console.log("track appending", track)
                     if (track.kind === "video") {
-                          track.setAttribute('autoplay', '');
-                          track.setAttribute('muted', '');
-                          track.setAttribute('playsinline', '');
+                          track.setAttribute('autoplay', true);
+                          track.setAttribute('playsinline', true);
                     }
                      matchMediaContainer.appendChild(track.attach());
 
