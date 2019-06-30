@@ -95,6 +95,7 @@ export default {
   },
   computed: mapState(["socket", "nspSocket", "usersOnline"]),
   async mounted() {
+
     this.webcamStream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true

@@ -1,5 +1,15 @@
 <template>
-    <div>
+    <div class="content">
+        <div v-if="loadingUsersVideo">
+            <p>Connecting you to a dev!</p>
+        </div>
+        <div id="videos">
+            <div id="my-media-div"></div>
+            <div id="remote-media-div"></div>
+        </div>
+
+    </div>
+    <!-- <div>
         <div id="loading" v-if="!showMessages">Loading</div>
         <div id="content-grid">
         <div id="my-media-div"></div>
@@ -22,7 +32,7 @@
             </div>
         </div>
         </div>
-     </div>
+     </div> -->
 </template>
 
 
@@ -42,14 +52,13 @@ export default {
   props: ["namespace", "name"],
   data() {
     return {
-      loadingUsersIn: true,
+      loadingUsersVideo: true,  
       currentPlayer: "",
       opponent: "",
       showLeftMatch: false,
       attendees: 0,
       message: "",
       messages: [],
-      loadedUsers: 0,
       showNames: false,
       showMessages: false,
       opponentTracks: [],
@@ -230,8 +239,7 @@ export default {
                 })
                 let contentGrid = document.querySelector("#content-grid");
                 setTimeout(() => {
-                    contentGrid.classList.add("opacity-important")
-                    this.showMessages = true;
+                    this.loadingUsersVideo = false;
                 }, 500)
 
 
@@ -245,92 +253,8 @@ export default {
 
 
 <style lang="scss">
-@keyframes fadeUp {
-    100% {opacity: 1; transform: translateY(0)}
-    
-}
-.opacity-important {
-    animation-name: fadeUp;
-    animation-fill-mode: forwards;
-    animation-duration: 1s;
-    animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
-}
-
-  #content-grid {
-    display: grid;
-    width: 80vw;
-    height: 500px;
-    margin: 75px auto 0 auto;
-    grid-template-areas:
-      "chat1 chat1 chat2 chat2"
-      "textChat textChat textChat textChat";
-    justify-items: center;
-    grid-column-gap: 20px;
-    grid-row-gap: 20px;
-    opacity: 0;
-    transform: translateY(50%);
-
-    #my-media-div {
-      width: 100%;
-      height: 100%;
-      grid-area: chat1;
+    .content {
+        background-color: #3EADFF;
+        min-height: 100vh;
     }
-
-    #remote-media-div {
-      width: 100%;
-      height: 100%;
-      grid-area: chat2;
-    }
-
-    #chatContainer {
-      height: 300px;
-      width: 100%;
-      grid-area: textChat;
-      background-color: #dedede;
-      border-radius: 20px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      #messageArea {
-        flex: 4;
-        width: 100%;
-        background-color: #dedede;
-        border-radius: 20px;
-        padding: 5px 10px;
-        overflow: scroll;
-      }
-
-      #sendArea {
-        flex: 1;
-        width: 100%;
-        background-color: #dedede;
-        border-radius: 20px;
-        padding: 5px 10px;
-        display: flex;
-
-        #textField {
-          flex: 4;
-        }
-
-        #sendBtn {
-          flex: 1;
-        }
-      }
-    }
-
-    video {
-      width: 100%;
-      border-radius: 20px;
-      -webkit-box-shadow: -4px 10px 22px 0px rgba(0, 0, 0, 0.75);
-      -moz-box-shadow: -4px 10px 22px 0px rgba(0, 0, 0, 0.75);
-      box-shadow: -4px 10px 22px 0px rgba(0, 0, 0, 0.75);
-    }
-  }
-  #loading {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%)
-
-  }
 </style>
