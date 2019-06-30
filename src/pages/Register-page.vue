@@ -1,5 +1,15 @@
 <template>
-  <div class="content">
+  <div>
+      <v-alert
+      :value="showMissingNickName"
+      :dismissible="true"
+      type="warning"
+      color="#FF6584"
+      @input="resetMissingNickname()"
+    >
+    Make sure you have entered in a nickname!
+     </v-alert>
+      <div class="content">
       <div id="weclomeSection">
         <h1 id="mainMessage">Share your story.</h1>
         <p class="subHeading" id="knowlegdeSub">
@@ -12,9 +22,10 @@
             <p class="subHeading t-center">Just enter in a nickname.</p>
             <v-text-field
             label="Nickname"
+            v-model="name"
           ></v-text-field>
            <p class="subHeading t-center">And</p>
-            <v-btn color="#FF6584" style="color: white; left: 50%; transform: translateX(-55%)">Meet A Dev!</v-btn>
+            <v-btn :loading="searching" @click="searchForGame()" color="#FF6584" style="color: white; left: 50%; transform: translateX(-55%)">Meet A Dev!</v-btn>
             <p class="t-center" id="devCount">There is currently {{ usersOnline }} 
               <span v-if="usersOnline === 1">dev</span> 
               <span v-if="usersOnline !== 1">devs</span>
@@ -22,6 +33,9 @@
           </div>
       </div>
   </div>
+
+  </div>
+
   <!-- <main>
     <v-alert
       :value="showUserLeftAlert"
@@ -70,7 +84,8 @@ export default {
       showConnectionError: false,
       showUserLeftAlert: false,
       webcamAllowed: false,
-      webcamStream: null
+      webcamStream: null,
+      showMissingNickName: false
     };
   },
   computed: mapState(["socket", "nspSocket", "usersOnline"]),
@@ -108,6 +123,11 @@ export default {
   },
   methods: {
     searchForGame() {
+      if (this.name === '') {
+        this.showMissingNickName = true;
+        return;
+
+      }
       this.socket.on("opponent-found", opponent => {
         this.$store.commit("updateShowUserLeftMatchAlert", false);
         this.searching = false;
@@ -123,6 +143,9 @@ export default {
 
       this.socket.emit("game-searching", this.name);
       this.searching = true;
+    },
+    resetMissingNickname() {
+      this.showMissingNickName = false;
     }
   }
 };
