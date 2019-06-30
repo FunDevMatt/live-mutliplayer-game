@@ -212,15 +212,19 @@ export default {
   }
   
 
-  @media screen and (max-width: 750px) {
+  @media screen and (max-width: 850px) {
     .content {
       grid-template-columns: 1fr;
     }
     #searchContent {
-        position: relative;
+        position: relative !important;
         top: 0;
         left: 0;
         transform: translate(0, 0);
+      }
+
+      #mainMessage {
+        margin-top: 2rem !important;
       }
     
   }
