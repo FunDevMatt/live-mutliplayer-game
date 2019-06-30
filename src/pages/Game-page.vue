@@ -121,7 +121,7 @@ export default {
           {
             name: roomName,
             tracks: localTracks,
-            preferredVideoCodecs: ["VP8", "H264"]
+            preferredVideoCodecs: ['H264', 'VP8']
           }
         );
 
