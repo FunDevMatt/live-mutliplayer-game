@@ -269,7 +269,6 @@ export default {
             #my-media-div {
                 position: absolute;
                 width: 10rem;
-                max-width: 10rem;
                 bottom: 1rem;
                 left: 1rem;
                 z-index: 20;
