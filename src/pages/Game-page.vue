@@ -132,9 +132,12 @@ export default {
           participant.tracks.forEach(publication => {
             if (publication.isSubscribed) {
               const track = publication.track;
-              console.log(1)
               this.opponentTracks.push(track);
             }
+          });
+
+          participant.on('trackAdded', (track) => {
+            this.opponentTracks.push(track)
           });
 
           // handle any new tracks the particpant adds
