@@ -161,7 +161,6 @@ export default {
 .t-center {
   text-align: center;
 }
-
   .content {
     text-align: left;
     min-height: 100vh;

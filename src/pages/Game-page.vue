@@ -252,13 +252,16 @@ export default {
 
 
 <style lang="scss">
+  * {
+        box-sizing: border-box;
+  }
     .content {
         background-color: #E3E3E3;
         min-height: 100vh;
         overflow: hidden;
 
         #remote-media-div {
-            width: 41rem;
+            width: 44rem;
             margin: 6rem auto 0 auto;
             position: relative;
 
@@ -275,7 +278,12 @@ export default {
                 width: 100%;
                 top: 0;
                 left: 0;
-                border: .3rem solid #3EADFF;
+                background-size: cover;
+                border-radius: 2rem;
+                -webkit-box-shadow: 0px 10px 17px -5px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 10px 17px -5px rgba(0,0,0,0.75);
+box-shadow: 0px 10px 17px -5px rgba(0,0,0,0.75);
+
             }
         }
     }
