@@ -262,6 +262,7 @@ export default {
 
         #remote-media-div {
             width: 44rem;
+            max-width: 100vw;
             margin: 6rem auto 0 auto;
             position: relative;
 
