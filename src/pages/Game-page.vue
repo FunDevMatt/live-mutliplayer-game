@@ -208,10 +208,8 @@ export default {
         );
 
         // Display your video locally for yourself to see
-        let track = await createLocalVideoTrack({ width: 320 });
-        console.log("da", track)
+        let track = Array.from(room.localParticipant.videoTracks.values())[0].track;
         this.localTrack = track;
-        console.log(this.localTrack)
 
 
         // handle room disconnects
