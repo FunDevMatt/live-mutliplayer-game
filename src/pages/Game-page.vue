@@ -1,12 +1,31 @@
 <template>
     <div class="content">
+
         <div v-if="loadingUsersVideo">
             <p>Connecting you to a dev!</p>
         </div>
-        <div id="remote-media-div">
-            <div id="my-media-div"></div>
-        </div>
+        <div id="loadedContent">
+          <h1 id="meet" v-if="!loadingUsersVideo">Meet {{ opponent.name }}!</h1>
+          <div id="remote-media-div">
+              <div id="messages">
+                <p v-for="(message, index) in messages" :key="index" >
+                  <span v-if="message.username === opponent.name">{{ opponent.name }}: </span>
+                  <span v-if="message.username !== opponent.name">You: </span>
+                  {{ message.text }}
+                </p>
+              </div>
+              <div id="my-media-div"></div>
+          </div>
+          <div id="messageArea" v-if="!loadingUsersVideo">
+            <v-text-field
+            v-model="message"
+            label="Say hi!"
+          ></v-text-field>
+          <v-btn color="info" @click="sendMessage()">Info</v-btn>
 
+
+          </div>
+        </div>
     </div>
     <!-- <div>
         <div id="loading" v-if="!showMessages">Loading</div>
@@ -209,8 +228,8 @@ export default {
     });
 
     this.nspSocket.on("message-received", message => {
-      console.log(message)
       this.messages.push(message);
+
     });
 
     this.nspSocket.on("user-left", () => {
@@ -243,7 +262,6 @@ export default {
                      matchMediaContainer.appendChild(track.attach());
 
                 })
-                let contentGrid = document.querySelector("#content-grid");
                 setTimeout(() => {
                     this.loadingUsersVideo = false;
                 }, 500)
@@ -266,11 +284,12 @@ export default {
         background-color: #E3E3E3;
         min-height: 100vh;
         overflow: hidden;
+      
 
         #remote-media-div {
             width: 44rem;
             max-width: 100vw;
-            margin: 6rem auto 0 auto;
+            margin: 0 auto;
             position: relative;
 
             #my-media-div {
@@ -279,6 +298,21 @@ export default {
                 bottom: 1rem;
                 left: 1rem;
                 z-index: 20;
+            }
+
+            #messages {
+              padding: .5rem 1.4rem;
+              position: absolute;
+              width: calc(100% - 13rem);
+              z-index: 20;
+              bottom: 1rem;
+              right: 1rem;
+              background-color: transparent;
+              color: white;
+              border-radius: 2rem;
+              height: 8rem;
+              overflow-y: scroll;
+              word-wrap: break-word;
             }
 
 
@@ -293,6 +327,22 @@ export default {
 box-shadow: 0px 10px 17px -5px rgba(0,0,0,0.75);
 
             }
+        }
+
+        #loadedContent {
+          margin-top: 6rem;
+
+          #meet {
+            text-align: center;
+            color: #3EADFF;
+          }
+
+          
+
+          #messageArea {
+            margin: 0 auto;
+            width: 44rem;
+          }
         }
     }
 </style>
